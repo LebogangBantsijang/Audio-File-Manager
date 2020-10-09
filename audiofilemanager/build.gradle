@@ -35,7 +35,7 @@ dependencies {
     implementation 'androidx.lifecycle:lifecycle-common-java8:2.3.0-beta01'
 }
 
-def siteUrl = 'https://github.com/LebogangBantsijang/Audio-File-Manager'
+/*def siteUrl = 'https://github.com/LebogangBantsijang/Audio-File-Manager'
 def gitUrl = 'https://github.com/LebogangBantsijang/Audio-File-Manager.git'
 group = "com.github.lebogangbantsijang"
 
@@ -113,4 +113,4 @@ bintray {
             }
         }
     }
-}
+}*/
