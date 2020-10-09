@@ -1,0 +1,3 @@
+include ':audiofilemanager'
+include ':app'
+rootProject.name = "Audio File Manager"
