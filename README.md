@@ -5,7 +5,7 @@
 
 ## Introduction
 
-This library allows you to manage local audio files on android devices withot having to deal with content resolvers or anything along those lines. This includes Albums, Artists, Playlists and Genre Items that are under the [MediaStore.Audio](https://developer.android.com/reference/android/provider/MediaStore.Audio) collection.
+This library allows you to manage local audio files on android devices without having to deal with content resolvers or anything along those lines. This includes Albums, Artists, Playlists and Genre Items that are under the [MediaStore.Audio](https://developer.android.com/reference/android/provider/MediaStore.Audio) collection.
 
 ## Gettting Started
 Before you get started, take a look at a working example of this library [Here.](https://youtu.be/SJoQsasNBAQ)
