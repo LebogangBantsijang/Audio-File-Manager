@@ -1,6 +1,4 @@
 apply plugin: 'com.android.library'
-apply plugin: "com.jfrog.bintray"
-apply plugin: 'android-maven'
 
 version = '1.0.0'
 
