@@ -51,11 +51,14 @@ audioFileManger.registerCallbacks(new AudioCallBacks() {
     }
 });
 ```
-The following code enables you to manually collect file from the device.
+The following code enables you to manually collect files from the device.
 ```
 AudioFileManger audioFileManger = new AudioFileManger();
 audioFileManger.getItems(this); //Returns list of Audio Items
 ```
+
+### Documentation
+Coming Soon.
 
 ##### Conditions
 * You cannot register callbacks if you have instantiated the AudioFileManager object without the context and lifecyce owner. If you do then an exception will be thrown.
