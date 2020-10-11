@@ -47,8 +47,7 @@ abstract class DatabaseOperations extends AlbumDatabaseScheme {
                 String firstYear = cursor.getString(cursor.getColumnIndex(MediaStore.Audio.Albums.FIRST_YEAR));
                 String lastYear = cursor.getString(cursor.getColumnIndex(MediaStore.Audio.Albums.LAST_YEAR));
                 String numSongs = cursor.getString(cursor.getColumnIndex(MediaStore.Audio.Albums.NUMBER_OF_SONGS));
-                String numSongsByArtist = cursor.getString(cursor.getColumnIndex(MediaStore.Audio.Albums.NUMBER_OF_SONGS_FOR_ARTIST));
-                list.add(new Album(title,albumId,artist,artistId,firstYear,lastYear,numSongs,numSongsByArtist));
+                list.add(new Album(title,albumId,artist,artistId,firstYear,lastYear,numSongs));
             }while (cursor.moveToNext());
             cursor.close();
         }
@@ -74,8 +73,7 @@ abstract class DatabaseOperations extends AlbumDatabaseScheme {
                 String firstYear = cursor.getString(cursor.getColumnIndex(MediaStore.Audio.Albums.FIRST_YEAR));
                 String lastYear = cursor.getString(cursor.getColumnIndex(MediaStore.Audio.Albums.LAST_YEAR));
                 String numSongs = cursor.getString(cursor.getColumnIndex(MediaStore.Audio.Albums.NUMBER_OF_SONGS));
-                String numSongsByArtist = cursor.getString(cursor.getColumnIndex(MediaStore.Audio.Albums.NUMBER_OF_SONGS_FOR_ARTIST));
-                list.add(new Album(title,albumId,artist,artistId,firstYear,lastYear,numSongs,numSongsByArtist));
+                list.add(new Album(title,albumId,artist,artistId,firstYear,lastYear,numSongs));
             }while (cursor.moveToNext());
             cursor.close();
         }
@@ -122,8 +120,7 @@ abstract class DatabaseOperations extends AlbumDatabaseScheme {
             String firstYear = cursor.getString(cursor.getColumnIndex(MediaStore.Audio.Albums.FIRST_YEAR));
             String lastYear = cursor.getString(cursor.getColumnIndex(MediaStore.Audio.Albums.LAST_YEAR));
             String numSongs = cursor.getString(cursor.getColumnIndex(MediaStore.Audio.Albums.NUMBER_OF_SONGS));
-            String numSongsByArtist = cursor.getString(cursor.getColumnIndex(MediaStore.Audio.Albums.NUMBER_OF_SONGS_FOR_ARTIST));
-            Album album = new Album(title,albumId,artist,artistId,firstYear,lastYear,numSongs,numSongsByArtist);
+            Album album = new Album(title,albumId,artist,artistId,firstYear,lastYear,numSongs);
             cursor.close();
             return album;
         }
@@ -147,8 +144,7 @@ abstract class DatabaseOperations extends AlbumDatabaseScheme {
             String firstYear = cursor.getString(cursor.getColumnIndex(MediaStore.Audio.Albums.FIRST_YEAR));
             String lastYear = cursor.getString(cursor.getColumnIndex(MediaStore.Audio.Albums.LAST_YEAR));
             String numSongs = cursor.getString(cursor.getColumnIndex(MediaStore.Audio.Albums.NUMBER_OF_SONGS));
-            String numSongsByArtist = cursor.getString(cursor.getColumnIndex(MediaStore.Audio.Albums.NUMBER_OF_SONGS_FOR_ARTIST));
-            Album album = new Album(title,albumId,artist,artistId,firstYear,lastYear,numSongs,numSongsByArtist);
+            Album album = new Album(title,albumId,artist,artistId,firstYear,lastYear,numSongs);
             cursor.close();
             return album;
         }
@@ -186,8 +182,7 @@ abstract class DatabaseOperations extends AlbumDatabaseScheme {
             String firstYear = cursor.getString(cursor.getColumnIndex(MediaStore.Audio.Albums.FIRST_YEAR));
             String lastYear = cursor.getString(cursor.getColumnIndex(MediaStore.Audio.Albums.LAST_YEAR));
             String numSongs = cursor.getString(cursor.getColumnIndex(MediaStore.Audio.Albums.NUMBER_OF_SONGS));
-            String numSongsByArtist = cursor.getString(cursor.getColumnIndex(MediaStore.Audio.Albums.NUMBER_OF_SONGS_FOR_ARTIST));
-            Album album = new Album(title,albumId,artist,artistId,firstYear,lastYear,numSongs,numSongsByArtist);
+            Album album = new Album(title,albumId,artist,artistId,firstYear,lastYear,numSongs);
             cursor.close();
             return album;
         }
@@ -211,8 +206,7 @@ abstract class DatabaseOperations extends AlbumDatabaseScheme {
             String firstYear = cursor.getString(cursor.getColumnIndex(MediaStore.Audio.Albums.FIRST_YEAR));
             String lastYear = cursor.getString(cursor.getColumnIndex(MediaStore.Audio.Albums.LAST_YEAR));
             String numSongs = cursor.getString(cursor.getColumnIndex(MediaStore.Audio.Albums.NUMBER_OF_SONGS));
-            String numSongsByArtist = cursor.getString(cursor.getColumnIndex(MediaStore.Audio.Albums.NUMBER_OF_SONGS_FOR_ARTIST));
-            Album album = new Album(title,albumId,artist,artistId,firstYear,lastYear,numSongs,numSongsByArtist);
+            Album album = new Album(title,albumId,artist,artistId,firstYear,lastYear,numSongs);
             cursor.close();
             return album;
         }

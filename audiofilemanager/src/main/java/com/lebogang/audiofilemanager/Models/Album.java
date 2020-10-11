@@ -12,10 +12,9 @@ public class Album extends Media {
     private final String firstYear;
     private final String lastYear;
     private final String numSongs;
-    private final String numSongsByArtist;
 
     public Album(String album, long albumId, String artist, long artistId, String firstYear
-            , String lastYear, String numSongs, String numSongsByArtist) {
+            , String lastYear, String numSongs) {
         this.album = album;
         this.albumId = albumId;
         this.artist = artist;
@@ -23,7 +22,6 @@ public class Album extends Media {
         this.firstYear = firstYear;
         this.lastYear = lastYear;
         this.numSongs = numSongs;
-        this.numSongsByArtist = numSongsByArtist;
     }
 
 
@@ -45,10 +43,6 @@ public class Album extends Media {
 
     public String getNumSongs() {
         return numSongs;
-    }
-
-    public String getNumSongsByArtist() {
-        return numSongsByArtist;
     }
 
     public Uri getAlbumArtUri() {
