@@ -11,7 +11,7 @@ import com.lebogang.audiofilemanager.Models.Album;
 
 import java.util.List;
 
-class AlbumManager extends DatabaseOperations{
+public class AlbumManager extends DatabaseOperations{
     private final Context context;
     private AlbumCallbacks callbacks;
     private final MutableLiveData<List<Album>> liveData;
@@ -20,7 +20,7 @@ class AlbumManager extends DatabaseOperations{
         this.context = context;
         liveData = new MutableLiveData<>();
     }
-    
+
     /**
      * To avoid getting album items manually, register collBacks using this method
      * @param lifecycleOwner is required
