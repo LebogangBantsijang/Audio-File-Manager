@@ -12,7 +12,6 @@ public abstract class AlbumDatabaseScheme {
             MediaStore.Audio.Albums._ID,
             MediaStore.Audio.Albums.ARTIST,
             MediaStore.Audio.Albums.NUMBER_OF_SONGS,
-            MediaStore.Audio.Albums.NUMBER_OF_SONGS_FOR_ARTIST,
             MediaStore.Audio.Albums.FIRST_YEAR,
             MediaStore.Audio.Albums.LAST_YEAR
     };
@@ -23,7 +22,6 @@ public abstract class AlbumDatabaseScheme {
             MediaStore.Audio.Albums.ARTIST_ID,
             MediaStore.Audio.Albums.ARTIST,
             MediaStore.Audio.Albums.NUMBER_OF_SONGS,
-            MediaStore.Audio.Albums.NUMBER_OF_SONGS_FOR_ARTIST,
             MediaStore.Audio.Albums.FIRST_YEAR,
             MediaStore.Audio.Albums.LAST_YEAR
     };
