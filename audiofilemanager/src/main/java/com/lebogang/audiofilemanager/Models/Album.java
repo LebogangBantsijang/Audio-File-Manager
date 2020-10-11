@@ -74,7 +74,6 @@ public class Album extends Media {
         dest.writeString(this.firstYear);
         dest.writeString(this.lastYear);
         dest.writeString(this.numSongs);
-        dest.writeString(this.numSongsByArtist);
     }
 
     protected Album(Parcel in) {
@@ -85,7 +84,6 @@ public class Album extends Media {
         this.firstYear = in.readString();
         this.lastYear = in.readString();
         this.numSongs = in.readString();
-        this.numSongsByArtist = in.readString();
     }
 
     public static final Creator<Album> CREATOR = new Creator<Album>() {
