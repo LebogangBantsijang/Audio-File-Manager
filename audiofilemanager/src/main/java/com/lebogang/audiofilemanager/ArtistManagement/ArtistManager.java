@@ -1,4 +1,4 @@
-package com.lebogang.audiofilemanager.AlbumManagement;
+package com.lebogang.audiofilemanager.ArtistManagement;
 
 import android.content.Context;
 
@@ -7,58 +7,58 @@ import androidx.lifecycle.DefaultLifecycleObserver;
 import androidx.lifecycle.LifecycleOwner;
 import androidx.lifecycle.MutableLiveData;
 
-import com.lebogang.audiofilemanager.Models.Album;
+import com.lebogang.audiofilemanager.Models.Artist;
 
 import java.util.ArrayList;
 import java.util.LinkedHashMap;
 import java.util.List;
 
-public class AlbumManager extends DatabaseOperations{
+public class ArtistManager extends DatabaseOperations {
     private final Context context;
-    private AlbumCallbacks callbacks;
-    private final MutableLiveData<List<Album>> liveData;
+    private ArtistCallbacks callbacks;
+    private final MutableLiveData<List<Artist>> liveData;
 
-    public AlbumManager(Context context) {
+    public ArtistManager(Context context) {
         this.context = context;
         liveData = new MutableLiveData<>();
     }
 
     /**
-     * To avoid getting album items manually, register collBacks using this method
+     * To avoid getting artists items manually, register collBacks using this method
      * @param lifecycleOwner is required
      * @param callbacks is also required
      * */
-    public void registerCallbacks(LifecycleOwner lifecycleOwner,AlbumCallbacks callbacks){
+    public void registerCallbacks(LifecycleOwner lifecycleOwner,ArtistCallbacks callbacks){
         this.callbacks = callbacks;
         lifecycleOwner.getLifecycle().addObserver(getLifecycleObserver());
     }
 
     @Override
-    public List<Album> getAlbums(){
+    public List<Artist> getArtists(){
         return super.queryItems(context);
     }
 
     @Override
-    public Album getAlbumItemWithID(long id){
+    public Artist getArtistItemWithId(long id){
         return super.queryItemID(context,id);
     }
 
     @Override
-    public Album getAlbumItemWithName(String name){
+    public Artist getArtistItemWithName(String name){
         return super.queryItemName(context, name);
     }
 
     /**
-     * Some albums can have the same name with different IDs. This will return a list without the
-     * duplicates. However, the song count specified in the album and the actual song count may not match
-     * @param albumList list containing the albums
+     * Some artists can have the same name with different IDs. This will return a list without the
+     * duplicates. However, the song count specified in the artist and the actual song count may not match
+     * @param artistList list containing the albums
      * @return filtered list.
      * */
-    public static List<Album> groupByName(List<Album> albumList){
-        LinkedHashMap<String, Album> linkedHashMap = new LinkedHashMap<>();
-        for (Album album:albumList){
-            if (!linkedHashMap.containsKey(album.getTitle()))
-                linkedHashMap.put(album.getTitle(), album);
+    public static List<Artist> groupByName(List<Artist> artistList){
+        LinkedHashMap<String, Artist> linkedHashMap = new LinkedHashMap<>();
+        for (Artist artist:artistList){
+            if (!linkedHashMap.containsKey(artist.getTitle()))
+                linkedHashMap.put(artist.getTitle(), artist);
         }
         return new ArrayList<>(linkedHashMap.values());
     }
@@ -67,14 +67,14 @@ public class AlbumManager extends DatabaseOperations{
         return new DefaultLifecycleObserver() {
             @Override
             public void onCreate(@NonNull LifecycleOwner owner) {
-                liveData.observe(owner, albumList -> {
-                    callbacks.onQueryComplete(albumList);
+                liveData.observe(owner, artistList -> {
+                    callbacks.onQueryComplete(artistList);
                 });
             }
 
             @Override
             public void onResume(@NonNull LifecycleOwner owner) {
-                liveData.setValue(getAlbums());
+                liveData.setValue(getArtists());
             }
 
             @Override

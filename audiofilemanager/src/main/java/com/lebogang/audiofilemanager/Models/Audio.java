@@ -5,8 +5,8 @@ import android.net.Uri;
 import android.os.Parcel;
 import android.provider.MediaStore;
 
-public class AudioMediaItem extends MediaItem {
-    private final long mediaId;
+public class Audio extends Media{
+    private final long id;
     private final long albumId;
     private final long artistId;
     private final long audioDuration;
@@ -19,8 +19,10 @@ public class AudioMediaItem extends MediaItem {
     private final String releaseYear;
     private final String trackNumber;
 
-    public AudioMediaItem(long mediaId, long albumId, long artistId, long audioDuration, long audioSize, long dateAdded, String title, String albumTitle, String artistTitle, String composer, String releaseYear, String trackNumber) {
-        this.mediaId = mediaId;
+    public Audio(long id, long albumId, long artistId, long audioDuration, long audioSize,
+                 long dateAdded, String title, String albumTitle, String artistTitle,
+                 String composer, String releaseYear, String trackNumber) {
+        this.id = id;
         this.albumId = albumId;
         this.artistId = artistId;
         this.audioDuration = audioDuration;
@@ -34,60 +36,16 @@ public class AudioMediaItem extends MediaItem {
         this.trackNumber = trackNumber;
     }
 
-    @Override
-    public Uri getContentUri() {
-        return ContentUris.withAppendedId(MediaStore.Audio.Media.EXTERNAL_CONTENT_URI, mediaId);
-    }
-
-    @Override
-    public long getMediaId() {
-        return mediaId;
-    }
-
-    @Override
-    public String getTitle() {
-        return title;
-    }
-
-    @Override
-    public String getSubTitle() {
-        return artistTitle + "-" + albumTitle;
-    }
-
-    @Override
-    public String getTrackCount() {
-        return "1";
-    }
-
-    @Override
-    public long getDuration() {
-        return audioDuration;
-    }
-
-    @Override
-    public int getMediaItemType() {
-        return MediaItem.MEDIA_TYPE_AUDIO;
-    }
-
-    /**
-     * Override this function and create custom URI
-     * */
-    @Override
-    public Uri getAlbumArtUri() {
-        return ContentUris.withAppendedId(Uri.parse("content://media/external/audio/albumart"), albumId);
-    }
-
-    @Override
-    public int describeContents() {
-        return 0;//No Special Objects in here
-    }
-
     public long getAlbumId() {
         return albumId;
     }
 
     public long getArtistId() {
         return artistId;
+    }
+
+    public long getAudioDuration() {
+        return audioDuration;
     }
 
     public long getAudioSize() {
@@ -118,9 +76,32 @@ public class AudioMediaItem extends MediaItem {
         return trackNumber;
     }
 
+    public Uri getAlbumArtUri() {
+        return ContentUris.withAppendedId(Uri.parse("content://media/external/audio/albumart"), albumId);
+    }
+
+    public Uri getUri() {
+        return ContentUris.withAppendedId(MediaStore.Audio.Media.EXTERNAL_CONTENT_URI, id);
+    }
+
+    @Override
+    public long getId() {
+        return id;
+    }
+
+    @Override
+    public String getTitle() {
+        return title;
+    }
+
+    @Override
+    public int describeContents() {
+        return 0;
+    }
+
     @Override
     public void writeToParcel(Parcel dest, int flags) {
-        dest.writeLong(this.mediaId);
+        dest.writeLong(this.id);
         dest.writeLong(this.albumId);
         dest.writeLong(this.artistId);
         dest.writeLong(this.audioDuration);
@@ -134,8 +115,8 @@ public class AudioMediaItem extends MediaItem {
         dest.writeString(this.trackNumber);
     }
 
-    protected AudioMediaItem(Parcel in) {
-        this.mediaId = in.readLong();
+    protected Audio(Parcel in) {
+        this.id = in.readLong();
         this.albumId = in.readLong();
         this.artistId = in.readLong();
         this.audioDuration = in.readLong();
@@ -149,15 +130,15 @@ public class AudioMediaItem extends MediaItem {
         this.trackNumber = in.readString();
     }
 
-    public static final Creator<AudioMediaItem> CREATOR = new Creator<AudioMediaItem>() {
+    public static final Creator<Audio> CREATOR = new Creator<Audio>() {
         @Override
-        public AudioMediaItem createFromParcel(Parcel source) {
-            return new AudioMediaItem(source);
+        public Audio createFromParcel(Parcel source) {
+            return new Audio(source);
         }
 
         @Override
-        public AudioMediaItem[] newArray(int size) {
-            return new AudioMediaItem[size];
+        public Audio[] newArray(int size) {
+            return new Audio[size];
         }
     };
 }
