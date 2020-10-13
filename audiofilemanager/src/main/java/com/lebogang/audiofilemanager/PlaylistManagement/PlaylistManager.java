@@ -81,6 +81,22 @@ public class PlaylistManager extends DatabaseOperations {
         return result;
     }
 
+    @Override
+    public boolean deleteAudioFromPlaylist(long id, String[] audioIds) {
+        boolean result = super.removeAudioFromPlaylist(context,id,audioIds);
+        if (result && liveData!=null)
+            liveData.setValue(getPlaylists());
+        return result;
+    }
+
+    @Override
+    public boolean deleteAudioFromPlaylist(long id, long audioId) {
+        boolean result = super.removeAudioFromPlaylist(context,id,audioId);
+        if (result && liveData!=null)
+            liveData.setValue(getPlaylists());
+        return result;
+    }
+
     private DefaultLifecycleObserver getLifecycleObserver(){
         return new DefaultLifecycleObserver() {
             @Override

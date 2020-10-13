@@ -240,4 +240,8 @@ abstract class DatabaseOperations extends DatabaseScheme{
     public abstract boolean addMultipleItemsToPlaylist(long id, String[] audioIds);
 
     public abstract boolean addSingleItemsToPlaylist(long id, String audioId);
+
+    public abstract boolean deleteAudioFromPlaylist(long id ,String[] audioIds);
+
+    public abstract boolean deleteAudioFromPlaylist(long id , long audioId);
 }

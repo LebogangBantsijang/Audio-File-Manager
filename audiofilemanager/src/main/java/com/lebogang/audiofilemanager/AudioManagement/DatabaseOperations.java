@@ -186,7 +186,7 @@ abstract class DatabaseOperations extends DatabaseScheme{
     protected List<Audio> queryWithIdArray(Context context, String[] audioIds){
         List<Audio> list = new ArrayList<>();
         Cursor cursor = context.getApplicationContext().getContentResolver().query(super.getMediaStoreUri()
-                ,super.getAudioProjection(), super.produceWhereClauses(audioIds),audioIds, null);
+                ,super.getAudioProjection(), super.produceWhereClauses(audioIds),null, null);
         if (cursor != null && cursor.moveToFirst()){
             do {
                 long mediaId = cursor.getLong(cursor.getColumnIndex(MediaStore.Audio.Media._ID));

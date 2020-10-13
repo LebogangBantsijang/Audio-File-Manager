@@ -24,12 +24,15 @@ abstract class DatabaseScheme {
     public abstract void setSortOrder(String defaultSortOrder);
 
     protected String produceWhereClauses(String[] strings){
-        String temp = "audio_id IN (" + strings[0];
-        for (int x = 1; x < strings.length; x++){
-            temp += ", " + strings[x];
+        if (strings.length > 0){
+            String temp = "audio_id IN (" + strings[0];
+            for (int x = 1; x < strings.length; x++){
+                temp += ", " + strings[x];
+            }
+            temp += ")";
+            return temp;
         }
-        temp += ")";
-        return temp;
+        return "audio_id IN (0)";
     }
 
 }
