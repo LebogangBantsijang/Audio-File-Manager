@@ -29,12 +29,15 @@ abstract class DatabaseScheme {
     }
 
     protected String produceWhereClauses(String[] strings){
-        String temp = "_id IN (" + strings[0];
-        for (int x = 1; x < strings.length; x++){
-            temp += ", " + strings[x];
+        if (strings.length > 0){
+            String temp = "_id IN (" + strings[0];
+            for (int x = 1; x < strings.length; x++){
+                temp += ", " + strings[x];
+            }
+            temp += ")";
+            return temp;
         }
-        temp += ")";
-        return temp;
+        return "_id IN (0)";
     }
 
     public abstract void setSortOrder(String order);
