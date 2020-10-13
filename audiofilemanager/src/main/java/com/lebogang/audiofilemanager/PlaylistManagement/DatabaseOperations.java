@@ -177,6 +177,20 @@ abstract class DatabaseOperations extends DatabaseScheme{
         return results != null;
     }
 
+    protected boolean removeAudioFromPlaylist(Context context, long id ,String[] audioIds){
+        int result = context.getApplicationContext().getContentResolver().delete(
+                MediaStore.Audio.Playlists.Members.getContentUri(MediaStore.VOLUME_EXTERNAL, id),
+                super.produceWhereClauses(audioIds), null);
+        return result == audioIds.length;
+    }
+
+    protected boolean removeAudioFromPlaylist(Context context, long id , long audioId){
+        int result = context.getApplicationContext().getContentResolver().delete(
+                MediaStore.Audio.Playlists.Members.getContentUri(MediaStore.VOLUME_EXTERNAL, id),
+                MediaStore.Audio.Playlists.Members.AUDIO_ID + "=?", new String[]{Long.toString(audioId)});
+        return result != 0;
+    }
+
     /**
      * Get the total number of items
      * */
