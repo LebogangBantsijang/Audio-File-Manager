@@ -52,7 +52,7 @@ abstract class DatabaseOperations extends DatabaseScheme {
     protected Genre queryItemID(Context context, long id){
         Cursor cursor = context.getApplicationContext().getContentResolver()
                 .query(super.getMediaStoreUri(),super.getGenreProjection()
-                        ,MediaStore.Audio.Genres._ID + "=?",new String[]{Long.toString(id)}, null);
+                 ,MediaStore.Audio.Genres._ID + "=?",new String[]{Long.toString(id)}, null);
         if (cursor!= null && cursor.moveToFirst()){
             long genreId = cursor.getLong(cursor.getColumnIndex(MediaStore.Audio.Genres._ID));
             String title = cursor.getString(cursor.getColumnIndex(MediaStore.Audio.Genres.NAME));

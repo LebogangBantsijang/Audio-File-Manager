@@ -190,7 +190,7 @@ abstract class DatabaseOperations extends DatabaseScheme{
                 MediaStore.Audio.Playlists.Members.AUDIO_ID + "=?", new String[]{Long.toString(audioId)});
         return result != 0;
     }
-
+  
     /**
      * Get the total number of items
      * */
