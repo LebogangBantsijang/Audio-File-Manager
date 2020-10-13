@@ -29,10 +29,11 @@ abstract class DatabaseScheme {
     }
 
     protected String produceWhereClauses(String[] strings){
-        String temp = MediaStore.Audio.Media._ID + "=?";
+        String temp = "_id IN (" + strings[0];
         for (int x = 1; x < strings.length; x++){
-            temp += " AND " + MediaStore.Audio.Media._ID + "=?";
+            temp += ", " + strings[x];
         }
+        temp += ")";
         return temp;
     }
 

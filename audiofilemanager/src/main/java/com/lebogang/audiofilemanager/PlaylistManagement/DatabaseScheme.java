@@ -22,4 +22,14 @@ abstract class DatabaseScheme {
      * @param defaultSortOrder : MediaStore Fields, e.g. {@link MediaStore.Audio.Playlists#NAME} + " ASC"
      * */
     public abstract void setSortOrder(String defaultSortOrder);
+
+    protected String produceWhereClauses(String[] strings){
+        String temp = "audio_id IN (" + strings[0];
+        for (int x = 1; x < strings.length; x++){
+            temp += ", " + strings[x];
+        }
+        temp += ")";
+        return temp;
+    }
+
 }

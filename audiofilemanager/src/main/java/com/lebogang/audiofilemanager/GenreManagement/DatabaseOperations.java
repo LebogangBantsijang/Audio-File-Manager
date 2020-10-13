@@ -4,7 +4,6 @@ import android.content.Context;
 import android.database.Cursor;
 import android.provider.MediaStore;
 
-import com.lebogang.audiofilemanager.ArtistManagement.DatabaseScheme;
 import com.lebogang.audiofilemanager.Models.Genre;
 
 import java.util.ArrayList;
@@ -21,7 +20,7 @@ abstract class DatabaseOperations extends DatabaseScheme {
     protected List<Genre> queryItems(Context context){
         List<Genre> list = new ArrayList<>();
         Cursor cursor = context.getApplicationContext().getContentResolver()
-                .query(super.getMediaStoreUri(),super.getArtistProjection()
+                .query(super.getMediaStoreUri(),super.getGenreProjection()
                 ,null,null, sortOrder);
         if (cursor!= null && cursor.moveToFirst()){
             do {
@@ -52,8 +51,8 @@ abstract class DatabaseOperations extends DatabaseScheme {
      * */
     protected Genre queryItemID(Context context, long id){
         Cursor cursor = context.getApplicationContext().getContentResolver()
-                .query(super.getMediaStoreUri(),super.getArtistProjection()
-                        ,MediaStore.Audio.Genres._ID + "=?",new String[]{Long.toString(id)}, null);
+                .query(super.getMediaStoreUri(),super.getGenreProjection()
+                 ,MediaStore.Audio.Genres._ID + "=?",new String[]{Long.toString(id)}, null);
         if (cursor!= null && cursor.moveToFirst()){
             long genreId = cursor.getLong(cursor.getColumnIndex(MediaStore.Audio.Genres._ID));
             String title = cursor.getString(cursor.getColumnIndex(MediaStore.Audio.Genres.NAME));
@@ -73,7 +72,7 @@ abstract class DatabaseOperations extends DatabaseScheme {
      * */
     protected Genre queryItemName(Context context, String name){
         Cursor cursor = context.getApplicationContext().getContentResolver()
-                .query(super.getMediaStoreUri(),super.getArtistProjection()
+                .query(super.getMediaStoreUri(),super.getGenreProjection()
                         ,MediaStore.Audio.Genres.NAME + "=?",new String[]{name}, null);
         if (cursor!= null && cursor.moveToFirst()){
             long genreId = cursor.getLong(cursor.getColumnIndex(MediaStore.Audio.Genres._ID));
