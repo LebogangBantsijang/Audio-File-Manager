@@ -147,9 +147,9 @@ public class AudioManager extends DatabaseOperations{
     @Override
     public boolean deleteAudio(long id) {
         boolean results = super.delete(context, id);
-        if (results && liveData != null){
+        if (results)
+            if(liveData!=null)
             liveData.setValue(super.query(context));
-        }
         return results;
     }
 
