@@ -63,7 +63,7 @@ The library has: -
 * AlbumManager
 * AudioManager
 
-Take a look at a working example of this library [Here.](https://youtu.be/SJoQsasNBAQ)
+Take a look at a working example of this library [Here.](https://youtu.be/Hoob6RnZfJI)
 
 [Video Tutorial](https:) on how the library works will be uploaded soon but everything is pretty straight forward.
 
