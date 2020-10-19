@@ -32,7 +32,7 @@ dependencies {
 #### Example
 How to get Audio and Album information from the external storage
 
-```
+```java
 AudioManager audioManger = new AudioManager(context);
 audioManger.registerCallbacks(new AudioCallbacks(){
     @Override
@@ -50,7 +50,7 @@ albumManager.registerCallbacks(new AlbumCallbacks(){
 }, lifecycleOwner);
 ```
 Alternatively you can do the following:
-```
+```java
 AudioManager audioManger = new AudioManager(context);
 List<Audio> list = audioManger.getAudio();
 
