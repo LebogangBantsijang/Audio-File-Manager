@@ -67,7 +67,7 @@ The library has: -
 [Video Tutorial](https://youtu.be/SJoQsasNBAQ)
 
 ### Compatability
-* Minimum Android SDK: Audio-File-Manager v4 requires a minimum API level of 21.
+* Minimum Android SDK: Audio-File-Manager requires a minimum API level of 21.
 
 ### License
 Apache 2.0. See the LICENSE file for details.
