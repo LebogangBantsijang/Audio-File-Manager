@@ -9,8 +9,8 @@ This library allows you to manage local audio files on android devices without h
 
 ## Gettting Started
 Before you get started, take a look at a working example of this library [Here.](https://youtu.be/SJoQsasNBAQ)
+
 #### Setup
-Add it to your build.gradle with:
 ```gradle
 allprojects {
     repositories {
@@ -18,11 +18,10 @@ allprojects {
     }
 }
 ```
-and:
 
 ```gradle
 dependencies {
-    implementation 'com.github.LebogangBantsijang:Audio-File-Manager:1.0.0'
+    implementation 'com.github.LebogangBantsijang:Audio-File-Manager:1.0.8'
 }
 ```
 ## Usage
@@ -31,38 +30,40 @@ dependencies {
 * Before you start ensure that you have permission to read or write to enternal storage. [Guide](https://developer.android.com/guide/topics/permissions/overview)
 
 #### How do I use Audio-File-Manager?
-The following code will collect audio files automatically from the the device moment your Activity or Fragment is created. If there is an update then the onGetAudio will be called
+The following code will collect audio files automatically from the the device moment your Activity or Fragment is created. If there is an update then the onQueryComplete will be called with an updated list.
 ```
-AudioFileManger audioFileManger = new AudioFileManger(this /*Context*/, this /*LifeCycle Owner*/);
-audioFileManger.registerCallbacks(new AudioCallBacks() {
+AudioManager audioManger = new AudioManager(context);
+audioManger.registerCallbacks(new AudioCallbacks(){
     @Override
-    public void onGetAudio(List<AudioMediaItem> mediaItems) {
-        //List of all local file
+    public void onQueryComplete(List<Audio> audioList){
+    //use data
     }
+}, lifecycleOwner);
 
+AlbumManager albumManager = new AlbumManager(context);
+albumManager.registerCallbacks(new AlbumCallbacks(){
     @Override
-    public void onUpdate(AudioMediaItem mediaItem) {
-        //Updated item
+    public void onQueryComplete(List<Album> albumList){
+    //use data
     }
-
-    @Override
-    public void onRemove(AudioMediaItem mediaItem) {
-        //Removed Item
-    }
-});
+}, lifecycleOwner);
 ```
-The following code enables you to manually collect files from the device.
+Alternatively you can do the following:
 ```
-AudioFileManger audioFileManger = new AudioFileManger();
-audioFileManger.getItems(this); //Returns list of Audio Items
+AudioManager audioManger = new AudioManager(context);
+List<Audio> list = audioManger.getAudio();
+
+AlbumManager albumManager = new AlbumManager(context);
+List<Album> list = albumManager.getAlbums();
 ```
+The library has: -
+* ArtistManager
+* PlaylistManager
+* GenreManager
+* AlbumManager
+* AudioManager
 
-### Documentation
-Coming Soon.
-
-##### Conditions
-* You cannot register callbacks if you have instantiated the AudioFileManager object without the context and lifecyce owner. If you do then an exception will be thrown.
-* If you have instantiated the AudioFileManager object without the context and lifecycle owner then every method you call should accept a context in the parameter.
+All of them have the exact same setup and each manager has it's own data model.
 
 ### Compatability
 * Minimum Android SDK: Audio-File-Manager v4 requires a minimum API level of 21.
