@@ -1,5 +1,5 @@
 # Audio File Manager
-[![](https://jitpack.io/v/LebogangBantsijang/Audio-File-Manager.svg)](https://jitpack.io/#LebogangBantsijang/Audio-File-Manager) ![API](https://img.shields.io/badge/Android-21+-red.svg)
+[![](https://jitpack.io/v/LebogangBantsijang/Audio-File-Manager.svg)](https://jitpack.io/#LebogangBantsijang/Audio-File-Manager)  ![API](https://img.shields.io/badge/Android-21+-red.svg)
 
 ![Logo](https://raw.githubusercontent.com/LebogangBantsijang/Audio-File-Manager/master/profile-image.png)
 
