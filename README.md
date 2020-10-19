@@ -27,7 +27,7 @@ dependencies {
 ## Usage
 
 #### Prerequisite
-* Before you start ensure that you have permission to read or write to enternal storage. [Guide](https://developer.android.com/guide/topics/permissions/overview)
+* Before you start ensure that you have permission to read or write to/from enternal storage. [Guide](https://developer.android.com/guide/topics/permissions/overview)
 
 #### Example
 How to get Audio and Album information from the external storage
