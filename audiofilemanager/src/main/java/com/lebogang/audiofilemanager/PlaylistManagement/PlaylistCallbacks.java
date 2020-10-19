@@ -12,4 +12,5 @@ public interface PlaylistCallbacks {
      * @param playlists contains all the collected playlists
      * */
     void onQueryComplete(List<Playlist> playlists);
+
 }

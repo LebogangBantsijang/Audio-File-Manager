@@ -12,4 +12,5 @@ public interface AudioCallbacks {
      * @param audioList contains all the collected artist
      * */
     void onQueryComplete(List<Audio> audioList);
+
 }
