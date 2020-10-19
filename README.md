@@ -8,7 +8,6 @@
 This library allows you to manage Albums, Artists, Playlists,  Genre and Audio Items that are under the [MediaStore.Audio](https://developer.android.com/reference/android/provider/MediaStore.Audio) collection without having to deal with content resolvers or anything along those lines.
 
 ## Gettting Started
-Before you get started, take a look at a working example of this library [Here.](https://youtu.be/SJoQsasNBAQ)
 
 #### Setup
 ```gradle
@@ -64,7 +63,9 @@ The library has: -
 * AlbumManager
 * AudioManager
 
-[Video Tutorial](https://youtu.be/SJoQsasNBAQ)
+Take a look at a working example of this library [Here.](https://youtu.be/SJoQsasNBAQ)
+
+[Video Tutorial](https:) on how the library works will be uploaded soon but everything is pretty straight forward.
 
 ### Compatability
 * Minimum Android SDK: Audio-File-Manager requires a minimum API level of 21.
