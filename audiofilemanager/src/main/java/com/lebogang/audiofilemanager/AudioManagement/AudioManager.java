@@ -139,7 +139,7 @@ public class AudioManager extends DatabaseOperations{
     public boolean updateAudio(long id, ContentValues values) {
         boolean result = super.update(context,id, values);
         if (result && liveData != null){
-            liveData.setValue(super.query(context));
+            liveData.setValue(query(context));
         }
         return result;
     }
@@ -147,9 +147,8 @@ public class AudioManager extends DatabaseOperations{
     @Override
     public boolean deleteAudio(long id) {
         boolean results = super.delete(context, id);
-        if (results)
-            if(liveData!=null)
-            liveData.setValue(super.query(context));
+        if (results && liveData!=null)
+            liveData.setValue(query(context));
         return results;
     }
 

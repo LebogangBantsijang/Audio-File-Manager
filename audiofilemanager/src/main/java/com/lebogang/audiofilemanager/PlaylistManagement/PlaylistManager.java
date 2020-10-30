@@ -84,8 +84,7 @@ public class PlaylistManager extends DatabaseOperations {
     @Override
     public boolean deleteAudioFromPlaylist(long id, String[] audioIds) {
         boolean result = super.removeAudioFromPlaylist(context,id,audioIds);
-        if (result)
-            if(liveData!=null)
+        if (result && liveData!=null)
             liveData.setValue(getPlaylists());
         return result;
     }
@@ -93,8 +92,7 @@ public class PlaylistManager extends DatabaseOperations {
     @Override
     public boolean deleteAudioFromPlaylist(long id, long audioId) {
         boolean result = super.removeAudioFromPlaylist(context,id,audioId);
-        if (result)
-            if(liveData!=null)
+        if (result && liveData!=null)
             liveData.setValue(getPlaylists());
         return result;
     }
