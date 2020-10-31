@@ -20,7 +20,7 @@ allprojects {
 
 ```gradle
 dependencies {
-    implementation 'com.github.LebogangBantsijang:Audio-File-Manager:1.0.8'
+    implementation 'com.github.LebogangBantsijang:Audio-File-Manager:1.0.9'
 }
 ```
 ## Usage
