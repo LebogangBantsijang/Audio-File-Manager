@@ -20,7 +20,7 @@ allprojects {
 
 ```gradle
 dependencies {
-    implementation 'com.github.LebogangBantsijang:Audio-File-Manager:1.0.9'
+    implementation 'com.github.LebogangBantsijang:Audio-File-Manager:1.0.10'
 }
 ```
 ## Usage
@@ -63,7 +63,7 @@ The library has: -
 * AlbumManager
 * AudioManager
 
-Take a look at a working example of this library [Here.](https://www.youtube.com/watch?v=4Ay8h3Pl91U)
+Take a look at a working example of this library [Here.](https://youtu.be/QWdGqH-Y-s0)
 
 [Video Tutorial](https:) on how the library works will be uploaded soon but everything is pretty straight forward.
 
