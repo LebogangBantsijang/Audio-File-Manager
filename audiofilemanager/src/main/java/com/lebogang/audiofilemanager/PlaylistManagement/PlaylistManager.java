@@ -1,3 +1,19 @@
+/*
+ * Copyright (c) 2020. Lebogang Bantsijng
+ * Licensed under the Apache License, Version 2.0 (the "License");
+ * you may not use this file except in compliance with the License.
+ * You may obtain a copy of the License at
+ *
+ *    http://www.apache.org/licenses/LICENSE-2.0
+ *
+ *  Unless required by applicable law or agreed to in writing, software
+ *  distributed under the License is distributed on an "AS IS" BASIS,
+ *  WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express
+ *   implied. See the License for the specific language governing
+ *   permissions and limitations under the License.
+ *
+ */
+
 package com.lebogang.audiofilemanager.PlaylistManagement;
 
 import android.content.Context;
@@ -44,7 +60,7 @@ public class PlaylistManager extends DatabaseOperations {
     @Override
     public boolean createPlaylist(String name) {
         boolean result = super.createPlaylist(context , name);
-        if (result && liveData!=null)
+        if (liveData!=null)
             liveData.setValue(getPlaylists());
         return result;
     }
@@ -52,7 +68,7 @@ public class PlaylistManager extends DatabaseOperations {
     @Override
     public boolean updatePlaylist(long id, String name) {
         boolean result = super.updatePlaylist(context, id , name);
-        if (result && liveData!=null)
+        if (liveData!=null)
             liveData.setValue(getPlaylists());
         return result;
     }
@@ -60,7 +76,7 @@ public class PlaylistManager extends DatabaseOperations {
     @Override
     public boolean deletePlaylist(long id) {
         boolean result = super.deletePlaylist(context , id);
-        if (result && liveData!=null)
+        if (liveData!=null)
             liveData.setValue(getPlaylists());
         return result;
     }
@@ -68,7 +84,7 @@ public class PlaylistManager extends DatabaseOperations {
     @Override
     public boolean addMultipleItemsToPlaylist(long id, String[] audioIds) {
         boolean result = super.addAudioToPlaylist(context,id, audioIds);
-        if (result && liveData!=null)
+        if (liveData!=null)
             liveData.setValue(getPlaylists());
         return result;
     }
@@ -76,7 +92,7 @@ public class PlaylistManager extends DatabaseOperations {
     @Override
     public boolean addSingleItemsToPlaylist(long id, String audioId) {
         boolean result = super.addAudioToPlaylist(context,id, audioId);
-        if (result && liveData!=null)
+        if (liveData!=null)
             liveData.setValue(getPlaylists());
         return result;
     }
@@ -84,7 +100,7 @@ public class PlaylistManager extends DatabaseOperations {
     @Override
     public boolean deleteAudioFromPlaylist(long id, String[] audioIds) {
         boolean result = super.removeAudioFromPlaylist(context,id,audioIds);
-        if (result && liveData!=null)
+        if (liveData!=null)
             liveData.setValue(getPlaylists());
         return result;
     }
@@ -92,7 +108,7 @@ public class PlaylistManager extends DatabaseOperations {
     @Override
     public boolean deleteAudioFromPlaylist(long id, long audioId) {
         boolean result = super.removeAudioFromPlaylist(context,id,audioId);
-        if (result && liveData!=null)
+        if (liveData!=null)
             liveData.setValue(getPlaylists());
         return result;
     }
