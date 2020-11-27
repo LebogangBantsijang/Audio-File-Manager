@@ -65,7 +65,7 @@ The library has: -
 
 Take a look at a working example of this library [Here.](https://youtu.be/QWdGqH-Y-s0)
 
-[Video Tutorial](https:) on how the library works will be uploaded soon but everything is pretty straight forward.
+[Video Tutorial](https://youtu.be/lgYP9WHGWAQ) on how the library works will be uploaded soon but everything is pretty straight forward.
 
 ### Compatability
 * Minimum Android SDK: Audio-File-Manager requires a minimum API level of 21.
