@@ -57,4 +57,6 @@ abstract class DatabaseScheme {
     }
 
     public abstract void setSortOrder(String order);
+
+    public abstract void setDuration(long duration);
 }

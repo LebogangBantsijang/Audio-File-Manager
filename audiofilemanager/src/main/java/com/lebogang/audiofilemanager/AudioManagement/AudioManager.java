@@ -200,4 +200,9 @@ public class AudioManager extends DatabaseOperations{
             }
         };
     }
+
+    @Override
+    public void setDuration(long minDuration) {
+        super.setDuration(minDuration);
+    }
 }

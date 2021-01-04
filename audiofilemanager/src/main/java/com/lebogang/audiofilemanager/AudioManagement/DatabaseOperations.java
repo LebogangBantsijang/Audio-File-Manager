@@ -29,6 +29,7 @@ import java.util.List;
 abstract class DatabaseOperations extends DatabaseScheme{
 
     private String sortOrder = MediaStore.Audio.Media.DEFAULT_SORT_ORDER;
+    private long duration = 0;
 
     /**
      * Get audio from device
@@ -53,7 +54,8 @@ abstract class DatabaseOperations extends DatabaseScheme{
                 String composer = cursor.getString(cursor.getColumnIndex(MediaStore.Audio.Media.COMPOSER));
                 String releaseYear = cursor.getString(cursor.getColumnIndex(MediaStore.Audio.Media.YEAR));
                 String trackNumber = cursor.getString(cursor.getColumnIndex(MediaStore.Audio.Media.TRACK));
-                list.add(new Audio(id,albumId,artistId,audioDuration,audioSize,dateAdded,title
+                if (audioDuration >= duration)
+                    list.add(new Audio(id,albumId,artistId,audioDuration,audioSize,dateAdded,title
                         ,albumTitle,artistTitle,composer,releaseYear,trackNumber));
             }while (cursor.moveToNext());
             cursor.close();
@@ -86,7 +88,8 @@ abstract class DatabaseOperations extends DatabaseScheme{
                 String composer = cursor.getString(cursor.getColumnIndex(MediaStore.Audio.Media.COMPOSER));
                 String releaseYear = cursor.getString(cursor.getColumnIndex(MediaStore.Audio.Media.YEAR));
                 String trackNumber = cursor.getString(cursor.getColumnIndex(MediaStore.Audio.Media.TRACK));
-                list.add(new Audio(mediaId,albumId,artistId,audioDuration,audioSize,dateAdded,title
+                if (audioDuration >= duration)
+                    list.add(new Audio(mediaId,albumId,artistId,audioDuration,audioSize,dateAdded,title
                         ,albumTitle,artistTitle,composer,releaseYear,trackNumber));
             }while (cursor.moveToNext());
             cursor.close();
@@ -119,7 +122,8 @@ abstract class DatabaseOperations extends DatabaseScheme{
                 String composer = cursor.getString(cursor.getColumnIndex(MediaStore.Audio.Media.COMPOSER));
                 String releaseYear = cursor.getString(cursor.getColumnIndex(MediaStore.Audio.Media.YEAR));
                 String trackNumber = cursor.getString(cursor.getColumnIndex(MediaStore.Audio.Media.TRACK));
-                list.add(new Audio(mediaId,albumId,artistId,audioDuration,audioSize,dateAdded,title
+                if (audioDuration >= duration)
+                    list.add(new Audio(mediaId,albumId,artistId,audioDuration,audioSize,dateAdded,title
                         ,albumTitle,artistTitle,composer,releaseYear,trackNumber));
             }while (cursor.moveToNext());
             cursor.close();
@@ -152,7 +156,8 @@ abstract class DatabaseOperations extends DatabaseScheme{
                 String composer = cursor.getString(cursor.getColumnIndex(MediaStore.Audio.Media.COMPOSER));
                 String releaseYear = cursor.getString(cursor.getColumnIndex(MediaStore.Audio.Media.YEAR));
                 String trackNumber = cursor.getString(cursor.getColumnIndex(MediaStore.Audio.Media.TRACK));
-                list.add(new Audio(mediaId,albumId,artistId,audioDuration,audioSize,dateAdded,title
+                if (audioDuration >= duration)
+                    list.add(new Audio(mediaId,albumId,artistId,audioDuration,audioSize,dateAdded,title
                         ,albumTitle,artistTitle,composer,releaseYear,trackNumber));
             }while (cursor.moveToNext());
             cursor.close();
@@ -185,7 +190,8 @@ abstract class DatabaseOperations extends DatabaseScheme{
                 String composer = cursor.getString(cursor.getColumnIndex(MediaStore.Audio.Media.COMPOSER));
                 String releaseYear = cursor.getString(cursor.getColumnIndex(MediaStore.Audio.Media.YEAR));
                 String trackNumber = cursor.getString(cursor.getColumnIndex(MediaStore.Audio.Media.TRACK));
-                list.add(new Audio(mediaId,albumId,artistId,audioDuration,audioSize,dateAdded,title
+                if (audioDuration >= duration)
+                    list.add(new Audio(mediaId,albumId,artistId,audioDuration,audioSize,dateAdded,title
                         ,albumTitle,artistTitle,composer,releaseYear,trackNumber));
             }while (cursor.moveToNext());
             cursor.close();
@@ -217,7 +223,8 @@ abstract class DatabaseOperations extends DatabaseScheme{
                 String composer = cursor.getString(cursor.getColumnIndex(MediaStore.Audio.Media.COMPOSER));
                 String releaseYear = cursor.getString(cursor.getColumnIndex(MediaStore.Audio.Media.YEAR));
                 String trackNumber = cursor.getString(cursor.getColumnIndex(MediaStore.Audio.Media.TRACK));
-                list.add(new Audio(mediaId,albumId,artistId,audioDuration,audioSize,dateAdded,title
+                if (audioDuration >= duration)
+                    list.add(new Audio(mediaId,albumId,artistId,audioDuration,audioSize,dateAdded,title
                         ,albumTitle,artistTitle,composer,releaseYear,trackNumber));
             }while (cursor.moveToNext());
             cursor.close();
@@ -333,6 +340,11 @@ abstract class DatabaseOperations extends DatabaseScheme{
     @Override
     public void setSortOrder(String order) {
         this.sortOrder = order;
+    }
+
+    @Override
+    public void setDuration(long duration) {
+        this.duration = duration;
     }
 
     public abstract List<Audio> getAudio();
