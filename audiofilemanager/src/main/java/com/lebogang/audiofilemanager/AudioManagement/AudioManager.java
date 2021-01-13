@@ -26,18 +26,22 @@ import androidx.lifecycle.MutableLiveData;
 
 import com.lebogang.audiofilemanager.Models.Audio;
 
+import java.util.ArrayList;
+import java.util.LinkedHashMap;
 import java.util.List;
 
 public class AudioManager extends DatabaseOperations{
-    private final Context context;
     private AudioCallbacks callbacks;
-    private MutableLiveData<List<Audio>> liveData;
-    private long albumId = -1, artistId = -1;
-    private String artistName = null, albumName = null;
-    private String[] audioIds = null;
+    private final MutableLiveData<List<Audio>> liveData;
+    private long albumId = -1;
+    private long artistId = -1;
+    private String albumName = null;
+    private String artistName = null;
+    private List<Long> audioIds = new ArrayList<>();
+    private AudioSearchType audioSearchType;
 
     public AudioManager(Context context) {
-        this.context = context;
+        super(context);
         liveData = new MutableLiveData<>();
     }
 
@@ -47,6 +51,7 @@ public class AudioManager extends DatabaseOperations{
      * @param callbacks is also required
      * */
     public void registerCallbacks(AudioCallbacks callbacks, LifecycleOwner owner){
+        audioSearchType = AudioSearchType.GENERAL_AUDIO;
         this.callbacks = callbacks;
         owner.getLifecycle().addObserver(getLifecycleObserver());
     }
@@ -58,6 +63,7 @@ public class AudioManager extends DatabaseOperations{
      * @param callbacks is also required
      * */
     public void registerCallbacksForAlbumAudio(AudioCallbacks callbacks, LifecycleOwner owner, String name){
+        audioSearchType = AudioSearchType.AUDIO_BY_ALBUM_NAME;
         this.callbacks = callbacks;
         this.albumName = name;
         owner.getLifecycle().addObserver(getLifecycleObserver());
@@ -70,6 +76,7 @@ public class AudioManager extends DatabaseOperations{
      * @param callbacks is also required
      * */
     public void registerCallbacksForAlbumAudio(AudioCallbacks callbacks, LifecycleOwner owner, long id){
+        audioSearchType = AudioSearchType.AUDIO_BY_ALBUM_ID;
         this.callbacks = callbacks;
         this.albumId = id;
         owner.getLifecycle().addObserver(getLifecycleObserver());
@@ -82,6 +89,7 @@ public class AudioManager extends DatabaseOperations{
      * @param callbacks is also required
      * */
     public void registerCallbacksForArtistAudio(AudioCallbacks callbacks, LifecycleOwner owner, String name){
+        audioSearchType = AudioSearchType.AUDIO_BY_ARTIST_NAME;
         this.callbacks = callbacks;
         this.artistName = name;
         owner.getLifecycle().addObserver(getLifecycleObserver());
@@ -94,6 +102,7 @@ public class AudioManager extends DatabaseOperations{
      * @param callbacks is also required
      * */
     public void registerCallbacksForArtistAudio(AudioCallbacks callbacks, LifecycleOwner owner, long id){
+        audioSearchType = AudioSearchType.AUDIO_BY_ARTIST_ID;
         this.callbacks = callbacks;
         this.artistId = id;
         owner.getLifecycle().addObserver(getLifecycleObserver());
@@ -105,104 +114,54 @@ public class AudioManager extends DatabaseOperations{
      * @param audioIds of the audios in focus. This will focus on audio with ids that match the ones in the provided array
      * @param callbacks is also required
      * */
-    public void registerCallbacksForAudioIds(AudioCallbacks callbacks, LifecycleOwner owner, String[] audioIds){
+    public void registerCallbacksForAudioIds(AudioCallbacks callbacks, LifecycleOwner owner, List<Long> audioIds){
+        audioSearchType = AudioSearchType.SPECIFIC_AUDIO;
         this.callbacks = callbacks;
         this.audioIds = audioIds;
         owner.getLifecycle().addObserver(getLifecycleObserver());
     }
 
-    @Override
-    public List<Audio> getAudio() {
-        return super.query(context);
-    }
-
-    @Override
-    public Audio getAudioItemWithId(long id) {
-        return super.queryWithId(context,id);
-    }
-
-    @Override
-    public Audio getAudioItemWithName(String name) {
-        return super.queryWithName(context, name);
-    }
-
-    @Override
-    public List<Audio> getAlbumAudioWithID(long id) {
-        return super.queryAlbumSongsWithID(context, id);
-    }
-
-    @Override
-    public List<Audio> getAlbumAudioWithName(String name) {
-        return super.queryAlbumSongsWithName(context, name);
-    }
-
-    @Override
-    public List<Audio> getArtistAudioWithID(long id) {
-        return super.queryArtistSongsWithID(context, id);
-    }
-
-    @Override
-    public List<Audio> getArtistAudioWithName(String name) {
-        return super.queryArtistSongsWithName(context, name);
-    }
-
-    @Override
-    public List<Audio> getArtistAudioWithIDArray(String[] audioIds) {
-        return super.queryWithIdArray(context, audioIds);
-    }
-
-    @Override
-    public boolean updateAudio(long id, ContentValues values) {
-        boolean result = super.update(context,id, values);
-        if (result && liveData != null){
-            liveData.setValue(query(context));
-        }
-        return result;
-    }
-
-    @Override
-    public boolean deleteAudio(long id) {
-        boolean results = super.delete(context, id);
-        if (liveData!=null)
-            liveData.setValue(getAudio());
-        return results;
-    }
-
     private DefaultLifecycleObserver getLifecycleObserver(){
         return new DefaultLifecycleObserver() {
+
             @Override
-            public void onCreate(@NonNull LifecycleOwner owner) {
-                liveData.observe(owner, audioList -> {
-                    callbacks.onQueryComplete(audioList);
-                });
+            public void onStart(@NonNull LifecycleOwner owner) {
+                liveData.observe(owner, audioList -> callbacks.onQueryComplete(audioList));
             }
 
             @Override
             public void onResume(@NonNull LifecycleOwner owner) {
-                if (albumId != -1)
-                    liveData.setValue(AudioManager.super.queryAlbumSongsWithID(context, albumId));
-                else if (artistId != -1)
-                    liveData.setValue(AudioManager.super.queryArtistSongsWithID(context, albumId));
-                else if (albumName != null)
-                    liveData.setValue(AudioManager.super.queryAlbumSongsWithName(context, albumName));
-                else if (artistName != null)
-                    liveData.setValue(AudioManager.super.queryArtistSongsWithName(context, artistName));
-                else if (audioIds != null)
-                    liveData.setValue(AudioManager.super.queryWithIdArray(context, audioIds));
-                else
-                    liveData.setValue(AudioManager.super.query(context));
+                switch (audioSearchType){
+                    case AUDIO_BY_ALBUM_ID:
+                        liveData.setValue(getAudioByAlbumId(albumId));
+                        break;
+                    case AUDIO_BY_ALBUM_NAME:
+                        liveData.setValue(getAudioByAlbumName(albumName));
+                        break;
+                    case AUDIO_BY_ARTIST_NAME:
+                        liveData.setValue(getAudioByArtistName(artistName));
+                        break;
+                    case AUDIO_BY_ARTIST_ID:
+                        liveData.setValue(getAudioByArtistId(artistId));
+                        break;
+                    case SPECIFIC_AUDIO:
+                        liveData.setValue(getAudio(audioIds));
+                        break;
+                    case GENERAL_AUDIO:
+                        liveData.setValue(getAudio());
+                        break;
+                }
             }
 
             @Override
-            public void onDestroy(@NonNull LifecycleOwner owner) {
+            public void onStop(@NonNull LifecycleOwner owner) {
                 liveData.removeObservers(owner);
                 owner.getLifecycle().removeObserver(this);
             }
         };
     }
 
-    @Override
-    public void setDuration(long minDuration) {
-        super.setDuration(minDuration);
+    private enum AudioSearchType{
+        GENERAL_AUDIO, AUDIO_BY_ALBUM_ID, AUDIO_BY_ALBUM_NAME, AUDIO_BY_ARTIST_ID, AUDIO_BY_ARTIST_NAME, SPECIFIC_AUDIO
     }
 }

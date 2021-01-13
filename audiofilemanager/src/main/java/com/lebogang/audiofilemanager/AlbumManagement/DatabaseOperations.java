@@ -23,19 +23,25 @@ import android.provider.MediaStore;
 import com.lebogang.audiofilemanager.Models.Album;
 
 import java.util.ArrayList;
+import java.util.LinkedHashMap;
 import java.util.List;
 
-abstract class DatabaseOperations extends DatabaseScheme {
+public abstract class DatabaseOperations extends DatabaseScheme {
     private String sortOrder = MediaStore.Audio.Albums.ALBUM + " ASC";
+    private final Context context;
+    private final List<Album> albumList = new ArrayList<>();
+
+    public DatabaseOperations(Context context) {
+        this.context = context.getApplicationContext();
+    }
 
     /**
      * Get albums from device
-     * @param context used to get the resolver
      * @return list of albums
      * */
-    protected List<Album> queryItems(Context context){
-        List<Album> list = new ArrayList<>();
-        Cursor cursor = context.getApplicationContext().getContentResolver()
+    public List<Album> getAlbums(){
+        albumList.clear();
+        Cursor cursor = context.getContentResolver()
                 .query(super.getMediaStoreUri(),super.getAlbumProjection()
                 ,null,null, sortOrder);
         if (cursor!= null && cursor.moveToFirst()){
@@ -47,30 +53,36 @@ abstract class DatabaseOperations extends DatabaseScheme {
                 String firstYear = cursor.getString(cursor.getColumnIndex(MediaStore.Audio.Albums.FIRST_YEAR));
                 String lastYear = cursor.getString(cursor.getColumnIndex(MediaStore.Audio.Albums.LAST_YEAR));
                 String numSongs = cursor.getString(cursor.getColumnIndex(MediaStore.Audio.Albums.NUMBER_OF_SONGS));
-                list.add(new Album(title,albumId,artist,artistId,firstYear,lastYear,numSongs));
+                albumList.add(new Album(title,albumId,artist,artistId,firstYear,lastYear,numSongs));
             }while (cursor.moveToNext());
             cursor.close();
         }
-        return list;
+        return albumList;
     }
 
     /**
-     * Call this method before you queryItems/getAlbumItems
-     * @param order Sort order: Default is {@link MediaStore.Audio.Albums#ALBUM + " ASC"}
+     * Some albums can have the same name with different IDs. This will return a list without the
+     * duplicates. However, the song count specified in the album and the actual song count may not match
+     * @return filtered list.
      * */
-    @Override
-    public void setSortOrder(String order) {
-        this.sortOrder = order;
+    public List<Album> getAlbumsGroupedByName(){
+        List<Album> albumList = getAlbums();
+        LinkedHashMap<String, Album> linkedHashMap = new LinkedHashMap<>();
+        for (Album album:albumList){
+            if (!linkedHashMap.containsKey(album.getTitle()))
+                linkedHashMap.put(album.getTitle(), album);
+        }
+        return new ArrayList<>(linkedHashMap.values());
     }
 
     /**
      * Get albums from device
-     * @param context is required to get resolver
      * @param id of the required album item
      * @return list of alums
      * */
-    protected Album queryItemID(Context context, long id){
-        Cursor cursor = context.getApplicationContext().getContentResolver().query(super.getMediaStoreUri(),super.getAlbumProjection()
+    public Album getAlbumById(long id){
+        albumList.clear();
+        Cursor cursor = context.getContentResolver().query(super.getMediaStoreUri(),super.getAlbumProjection()
                 ,MediaStore.Audio.Albums._ID + "=?",new String[]{Long.toString(id)}, null);
         if (cursor!= null && cursor.moveToFirst()){
             long albumId = cursor.getLong(cursor.getColumnIndex(MediaStore.Audio.Albums._ID));
@@ -89,12 +101,11 @@ abstract class DatabaseOperations extends DatabaseScheme {
 
     /**
      * Get albums from device
-     * @param context is required to get resolver
      * @param name of the required album item
      * @return list of alums
      * */
-    protected Album queryItemName(Context context, String name){
-        Cursor cursor = context.getApplicationContext().getContentResolver().query(super.getMediaStoreUri(),super.getAlbumProjection()
+    public Album getAlbumByName(String name){
+        Cursor cursor = context.getContentResolver().query(super.getMediaStoreUri(),super.getAlbumProjection()
                 ,MediaStore.Audio.Albums.ALBUM + "=?",new String[]{name}, null);
         if (cursor!= null && cursor.moveToFirst()){
             long albumId = cursor.getLong(cursor.getColumnIndex(MediaStore.Audio.Albums._ID));
@@ -112,20 +123,11 @@ abstract class DatabaseOperations extends DatabaseScheme {
     }
 
     /**
-     * Get the total number of items
+     * Call this method before you queryItems/getAlbumItems
+     * @param order Sort order: Default is {@link MediaStore.Audio.Albums#ALBUM + " ASC"}
      * */
-    public int getItemCount(Context context){
-        Cursor cursor = context.getApplicationContext().getContentResolver().query(super.getMediaStoreUri()
-                ,new String[]{MediaStore.Audio.Albums._ID}, null,null, null);
-        if (cursor != null){
-            int count = cursor.getCount();
-            cursor.close();
-            return count;
-        }
-        return 0;
+    public void setSortOrder(String order) {
+        this.sortOrder = order;
     }
 
-    public abstract List<Album> getAlbums();
-    public abstract Album getAlbumItemWithID(long id);
-    public abstract Album getAlbumItemWithName(String name);
 }

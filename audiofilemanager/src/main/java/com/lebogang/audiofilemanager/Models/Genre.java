@@ -18,19 +18,26 @@ package com.lebogang.audiofilemanager.Models;
 
 import android.os.Parcel;
 
+import java.util.ArrayList;
+import java.util.List;
+
 public class Genre extends Media{
     private final long id;
     private final String name;
-    private final String[] audioIds;
+    private final List<String> audioIds;
 
-    public Genre(long id, String name, String[] audioIds) {
+    public Genre(long id, String name, List<String> audioIds) {
         this.id = id;
         this.name = name;
         this.audioIds = audioIds;
     }
 
-    public String[] getAudioIds() {
-        return audioIds;
+    public List<Long> getAudioIds() {
+        List<Long> list = new ArrayList<>();
+        for (String id:audioIds){
+            list.add(Long.parseLong(id));
+        }
+        return list;
     }
 
     @Override
@@ -53,13 +60,13 @@ public class Genre extends Media{
     public void writeToParcel(Parcel dest, int flags) {
         dest.writeLong(this.id);
         dest.writeString(this.name);
-        dest.writeStringArray(this.audioIds);
+        dest.writeList(this.audioIds);
     }
 
     protected Genre(Parcel in) {
         this.id = in.readLong();
         this.name = in.readString();
-        this.audioIds = in.createStringArray();
+        this.audioIds = in.createStringArrayList();
     }
 
     public static final Creator<Genre> CREATOR = new Creator<Genre>() {

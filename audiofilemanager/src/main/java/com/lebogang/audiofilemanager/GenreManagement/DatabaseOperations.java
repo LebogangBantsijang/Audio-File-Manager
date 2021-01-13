@@ -25,54 +25,58 @@ import com.lebogang.audiofilemanager.Models.Genre;
 import java.util.ArrayList;
 import java.util.List;
 
-abstract class DatabaseOperations extends DatabaseScheme {
+public abstract class DatabaseOperations extends DatabaseScheme {
     private String sortOrder = MediaStore.Audio.Genres.NAME + " ASC";
+    private final List<String> audioIds = new ArrayList<>();
+    private final List<Genre> genreList = new ArrayList<>();
+    private final Context context;
+
+    public DatabaseOperations(Context context) {
+        this.context = context.getApplicationContext();
+    }
 
     /**
      * Get genres from device
-     * @param context used to get the resolver
      * @return list of genres
      * */
-    protected List<Genre> queryItems(Context context){
-        List<Genre> list = new ArrayList<>();
-        Cursor cursor = context.getApplicationContext().getContentResolver()
+    public List<Genre> getGenres(){
+        genreList.clear();
+        Cursor cursor = context.getContentResolver()
                 .query(super.getMediaStoreUri(),super.getGenreProjection()
                 ,null,null, sortOrder);
         if (cursor!= null && cursor.moveToFirst()){
             do {
                 long genreId = cursor.getLong(cursor.getColumnIndex(MediaStore.Audio.Genres._ID));
                 String title = cursor.getString(cursor.getColumnIndex(MediaStore.Audio.Genres.NAME));
-                String[] audioIds = getAudioIds(context, genreId);
-                list.add(new Genre(genreId, title, audioIds));
+                getAudioIds(genreId);
+                genreList.add(new Genre(genreId, title, audioIds));
             }while (cursor.moveToNext());
             cursor.close();
         }
-        return list;
+        return genreList;
     }
 
     /**
      * Call this method before you queryItems/getArtistItems
      * @param order Sort order: Default is {@link MediaStore.Audio.Genres#NAME + " ASC"}
      * */
-    @Override
     public void setSortOrder(String order) {
         this.sortOrder = order;
     }
 
     /**
      * Get genres from device
-     * @param context is required to get resolver
      * @param id of the required genre item
      * @return list of genres
      * */
-    protected Genre queryItemID(Context context, long id){
+    public Genre getGenre(long id){
         Cursor cursor = context.getApplicationContext().getContentResolver()
                 .query(super.getMediaStoreUri(),super.getGenreProjection()
                         ,MediaStore.Audio.Genres._ID + "=?",new String[]{Long.toString(id)}, null);
         if (cursor!= null && cursor.moveToFirst()){
             long genreId = cursor.getLong(cursor.getColumnIndex(MediaStore.Audio.Genres._ID));
             String title = cursor.getString(cursor.getColumnIndex(MediaStore.Audio.Genres.NAME));
-            String[] audioIds = getAudioIds(context, genreId);
+            getAudioIds(genreId);
             Genre genre = new Genre(genreId, title, audioIds);
             cursor.close();
             return genre;
@@ -82,18 +86,17 @@ abstract class DatabaseOperations extends DatabaseScheme {
 
     /**
      * Get genres from device
-     * @param context is required to get resolver
      * @param name of the required genre item
      * @return list of genres
      * */
-    protected Genre queryItemName(Context context, String name){
-        Cursor cursor = context.getApplicationContext().getContentResolver()
+    public Genre getGenreByName(String name){
+        Cursor cursor = context.getContentResolver()
                 .query(super.getMediaStoreUri(),super.getGenreProjection()
                         ,MediaStore.Audio.Genres.NAME + "=?",new String[]{name}, null);
         if (cursor!= null && cursor.moveToFirst()){
             long genreId = cursor.getLong(cursor.getColumnIndex(MediaStore.Audio.Genres._ID));
             String title = cursor.getString(cursor.getColumnIndex(MediaStore.Audio.Genres.NAME));
-            String[] audioIds = getAudioIds(context, genreId);
+            getAudioIds(genreId);
             Genre genre = new Genre(genreId, title, audioIds);
             cursor.close();
             return genre;
@@ -101,43 +104,18 @@ abstract class DatabaseOperations extends DatabaseScheme {
         return null;
     }
 
-    /**
-     * Get the total number of items
-     * */
-    public int getItemCount(Context context){
-        Cursor cursor = context.getApplicationContext().getContentResolver().query(super.getMediaStoreUri()
-                ,new String[]{MediaStore.Audio.Genres._ID}, null,null, null);
-        if (cursor != null){
-            int count = cursor.getCount();
-            cursor.close();
-            return count;
-        }
-        return 0;
-    }
-
-    private String[] getAudioIds(Context context, long id){
-        Cursor cursor = context.getApplicationContext().getContentResolver().query(
+    private List<String> getAudioIds(long id){
+        audioIds.clear();
+        Cursor cursor = context.getContentResolver().query(
                 MediaStore.Audio.Genres.Members.getContentUri(MediaStore.VOLUME_EXTERNAL, id)
                 , new String[]{MediaStore.Audio.Genres.Members.AUDIO_ID}, null, null, null);
-        if (cursor!= null){
-            String[] audioIds = new String[cursor.getCount()];
-            if (cursor.moveToFirst()){
-                int index = 0;
-                do {
-                    String audioId = cursor.getString(cursor.getColumnIndex(MediaStore.Audio.Genres.Members.AUDIO_ID));
-                    audioIds[index] = audioId;
-                    index++;
-                }while (cursor.moveToNext());
-            }
+        if (cursor!= null && cursor.moveToFirst()){
+            do {
+                String audioId = cursor.getString(cursor.getColumnIndex(MediaStore.Audio.Genres.Members.AUDIO_ID));
+                audioIds.add(audioId);
+            }while (cursor.moveToNext());
             cursor.close();
-            return audioIds;
         }
-        return new String[0];
+        return audioIds;
     }
-
-    public abstract List<Genre> getGenres();
-
-    public abstract Genre getGenreItemWithId(long id);
-
-    public abstract Genre getGenreItemWithName(String name);
 }

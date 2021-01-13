@@ -34,5 +34,4 @@ abstract class DatabaseScheme {
         return MediaStore.Audio.Genres.EXTERNAL_CONTENT_URI;
     }
 
-    public abstract void setSortOrder(String order);
 }

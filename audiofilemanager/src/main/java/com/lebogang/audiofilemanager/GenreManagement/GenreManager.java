@@ -30,12 +30,11 @@ import java.util.LinkedHashMap;
 import java.util.List;
 
 public class GenreManager extends DatabaseOperations {
-    private final Context context;
     private GenreCallbacks callbacks;
     private final MutableLiveData<List<Genre>> liveData;
 
     public GenreManager(Context context) {
-        this.context = context;
+        super(context);
         liveData = new MutableLiveData<>();
     }
 
@@ -49,43 +48,20 @@ public class GenreManager extends DatabaseOperations {
         lifecycleOwner.getLifecycle().addObserver(getLifecycleObserver());
     }
 
-    @Override
-    public List<Genre> getGenres() {
-        return super.queryItems(context);
-    }
-
-    @Override
-    public Genre getGenreItemWithId(long id) {
-        return super.queryItemID(context, id);
-    }
-
-    @Override
-    public Genre getGenreItemWithName(String name) {
-        return super.queryItemName(context, name);
-    }
-
-    /**
-     * Some genres can have the same name with different IDs. This will return a list without the
-     * duplicates. However, the song count specified in the genre and the actual song count may not match
-     * @param genreList list containing the genres
-     * @return filtered list.
-     * */
-    public static List<Genre> groupByName(List<Genre> genreList){
-        LinkedHashMap<String, Genre> linkedHashMap = new LinkedHashMap<>();
-        for (Genre genre:genreList){
-            if (!linkedHashMap.containsKey(genre.getTitle()))
-                linkedHashMap.put(genre.getTitle(), genre);
-        }
-        return new ArrayList<>(linkedHashMap.values());
-    }
 
     private DefaultLifecycleObserver getLifecycleObserver(){
         return new DefaultLifecycleObserver() {
             @Override
-            public void onCreate(@NonNull LifecycleOwner owner) {
+            public void onStart(@NonNull LifecycleOwner owner) {
                 liveData.observe(owner, genreList -> {
                     callbacks.onQueryComplete(genreList);
                 });
+            }
+
+            @Override
+            public void onStop(@NonNull LifecycleOwner owner) {
+                liveData.removeObservers(owner);
+                owner.getLifecycle().removeObserver(this);
             }
 
             @Override
@@ -93,11 +69,6 @@ public class GenreManager extends DatabaseOperations {
                 liveData.setValue(getGenres());
             }
 
-            @Override
-            public void onDestroy(@NonNull LifecycleOwner owner) {
-                liveData.removeObservers(owner);
-                owner.getLifecycle().removeObserver(this);
-            }
         };
     }
 }

@@ -36,7 +36,7 @@ abstract class DatabaseScheme {
             MediaStore.Audio.Media.YEAR
     };
 
-    public String[] getAudioProjection() {
+    protected String[] getAudioProjection() {
         return audioProjection;
     }
 
@@ -55,8 +55,4 @@ abstract class DatabaseScheme {
         }
         return "_id IN (0)";
     }
-
-    public abstract void setSortOrder(String order);
-
-    public abstract void setDuration(long duration);
 }

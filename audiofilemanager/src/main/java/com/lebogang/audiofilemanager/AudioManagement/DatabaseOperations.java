@@ -19,27 +19,40 @@ package com.lebogang.audiofilemanager.AudioManagement;
 import android.content.ContentValues;
 import android.content.Context;
 import android.database.Cursor;
+import android.os.Build;
 import android.provider.MediaStore;
+
+import androidx.annotation.NonNull;
+import androidx.annotation.Nullable;
+import androidx.annotation.RequiresApi;
 
 import com.lebogang.audiofilemanager.Models.Audio;
 
 import java.util.ArrayList;
 import java.util.List;
 
-abstract class DatabaseOperations extends DatabaseScheme{
+public abstract class DatabaseOperations extends DatabaseScheme{
 
     private String sortOrder = MediaStore.Audio.Media.DEFAULT_SORT_ORDER;
     private long duration = 0;
+    private final List<Audio> audioList = new ArrayList<>();
+    private final Context context;
+
+    public DatabaseOperations(Context context) {
+        this.context = context.getApplicationContext();
+    }
 
     /**
-     * Get audio from device
-     * @param context used to get the resolver
-     * @return list of audio
+     * Get audio from device. Audio files will be filtered based the duration attribute.
+     * Set duration before calling this method or everything will be selected.
+     * Same applies to the sort order
+     * @return {@link Audio}
      * */
-    protected List<Audio> query(Context context){
-        List<Audio> list = new ArrayList<>();
+    public List<Audio> getAudio(){
+        audioList.clear();
         Cursor cursor = context.getApplicationContext().getContentResolver().query(super.getMediaStoreUri()
-                ,super.getAudioProjection(), null, null, sortOrder);
+                ,super.getAudioProjection(), MediaStore.Audio.Media.DURATION + ">= ?"
+                , new String[]{Long.toString(duration)}, sortOrder);
         if (cursor != null && cursor.moveToFirst()){
             do {
                 long id = cursor.getLong(cursor.getColumnIndex(MediaStore.Audio.Media._ID));
@@ -54,29 +67,29 @@ abstract class DatabaseOperations extends DatabaseScheme{
                 String composer = cursor.getString(cursor.getColumnIndex(MediaStore.Audio.Media.COMPOSER));
                 String releaseYear = cursor.getString(cursor.getColumnIndex(MediaStore.Audio.Media.YEAR));
                 String trackNumber = cursor.getString(cursor.getColumnIndex(MediaStore.Audio.Media.TRACK));
-                if (audioDuration >= duration)
-                    list.add(new Audio(id,albumId,artistId,audioDuration,audioSize,dateAdded,title
+                audioList.add(new Audio(id,albumId,artistId,audioDuration,audioSize,dateAdded,title
                         ,albumTitle,artistTitle,composer,releaseYear,trackNumber));
             }while (cursor.moveToNext());
             cursor.close();
         }
-        return list;
+        return audioList;
     }
 
     /**
-     * Get audio from device with a specific albumId
-     * @param context used to get the resolver
-     * @param id of the album
-     * @return list of audio
+     * Get audio from device. Audio files will be filtered based the duration attribute.
+     * Set duration from calling this method or everything will be selected.
+     * Same applies to the sort order
+     * @param  audioIdList: list of audioIds
+     * @return {@link Audio}
      * */
-    protected List<Audio> queryAlbumSongsWithID(Context context, long id){
-        List<Audio> list = new ArrayList<>();
+    public List<Audio> getAudio( List<Long> audioIdList){
+        audioList.clear();
         Cursor cursor = context.getApplicationContext().getContentResolver().query(super.getMediaStoreUri()
-                ,super.getAudioProjection(), MediaStore.Audio.Media.ALBUM_ID + "=?", new String[]{Long.toString(id)}
-                , null);
+                ,super.getAudioProjection(), MediaStore.Audio.Media.DURATION + ">=?"
+                , new String[]{Long.toString(duration)}, sortOrder);
         if (cursor != null && cursor.moveToFirst()){
             do {
-                long mediaId = cursor.getLong(cursor.getColumnIndex(MediaStore.Audio.Media._ID));
+                long id = cursor.getLong(cursor.getColumnIndex(MediaStore.Audio.Media._ID));
                 long albumId = cursor.getLong(cursor.getColumnIndex(MediaStore.Audio.Media.ALBUM_ID));
                 long artistId = cursor.getLong(cursor.getColumnIndex(MediaStore.Audio.Media.ARTIST_ID));
                 long audioDuration = cursor.getLong(cursor.getColumnIndex(MediaStore.Audio.Media.DURATION));
@@ -88,162 +101,27 @@ abstract class DatabaseOperations extends DatabaseScheme{
                 String composer = cursor.getString(cursor.getColumnIndex(MediaStore.Audio.Media.COMPOSER));
                 String releaseYear = cursor.getString(cursor.getColumnIndex(MediaStore.Audio.Media.YEAR));
                 String trackNumber = cursor.getString(cursor.getColumnIndex(MediaStore.Audio.Media.TRACK));
-                if (audioDuration >= duration)
-                    list.add(new Audio(mediaId,albumId,artistId,audioDuration,audioSize,dateAdded,title
-                        ,albumTitle,artistTitle,composer,releaseYear,trackNumber));
+                if (audioIdList.contains(id))
+                    audioList.add(new Audio(id,albumId,artistId,audioDuration,audioSize,dateAdded,title
+                            ,albumTitle,artistTitle,composer,releaseYear,trackNumber));
             }while (cursor.moveToNext());
             cursor.close();
         }
-        return list;
+        return audioList;
     }
 
     /**
-     * Get audio from device with a specific album name
-     * @param context used to get the resolver
-     * @param name of the album
-     * @return list of audio
+     * Get audio from device.
+     * @param  audioId: audioId
+     * @return {@link Audio}
      * */
-    protected List<Audio> queryAlbumSongsWithName(Context context, String name){
-        List<Audio> list = new ArrayList<>();
+    @Nullable
+    public Audio getAudio( long audioId){
         Cursor cursor = context.getApplicationContext().getContentResolver().query(super.getMediaStoreUri()
-                ,super.getAudioProjection(), MediaStore.Audio.Media.ALBUM + "=?", new String[]{name}
-                , null);
+                ,super.getAudioProjection(), MediaStore.Audio.Media._ID + "=?"
+                , new String[]{Long.toString(audioId)}, null);
         if (cursor != null && cursor.moveToFirst()){
-            do {
-                long mediaId = cursor.getLong(cursor.getColumnIndex(MediaStore.Audio.Media._ID));
-                long albumId = cursor.getLong(cursor.getColumnIndex(MediaStore.Audio.Media.ALBUM_ID));
-                long artistId = cursor.getLong(cursor.getColumnIndex(MediaStore.Audio.Media.ARTIST_ID));
-                long audioDuration = cursor.getLong(cursor.getColumnIndex(MediaStore.Audio.Media.DURATION));
-                long audioSize = cursor.getLong(cursor.getColumnIndex(MediaStore.Audio.Media.SIZE));
-                long dateAdded = cursor.getLong(cursor.getColumnIndex(MediaStore.Audio.Media.DATE_ADDED));
-                String title = cursor.getString(cursor.getColumnIndex(MediaStore.Audio.Media.TITLE));
-                String albumTitle = cursor.getString(cursor.getColumnIndex(MediaStore.Audio.Media.ALBUM));
-                String artistTitle = cursor.getString(cursor.getColumnIndex(MediaStore.Audio.Media.ARTIST));
-                String composer = cursor.getString(cursor.getColumnIndex(MediaStore.Audio.Media.COMPOSER));
-                String releaseYear = cursor.getString(cursor.getColumnIndex(MediaStore.Audio.Media.YEAR));
-                String trackNumber = cursor.getString(cursor.getColumnIndex(MediaStore.Audio.Media.TRACK));
-                if (audioDuration >= duration)
-                    list.add(new Audio(mediaId,albumId,artistId,audioDuration,audioSize,dateAdded,title
-                        ,albumTitle,artistTitle,composer,releaseYear,trackNumber));
-            }while (cursor.moveToNext());
-            cursor.close();
-        }
-        return list;
-    }
-
-    /**
-     * Get audio from device with a specific artistId
-     * @param context used to get the resolver
-     * @param id of the artist
-     * @return list of audio
-     * */
-    protected List<Audio> queryArtistSongsWithID(Context context, long id){
-        List<Audio> list = new ArrayList<>();
-        Cursor cursor = context.getApplicationContext().getContentResolver().query(super.getMediaStoreUri()
-                ,super.getAudioProjection(), MediaStore.Audio.Media.ARTIST_ID + "=?", new String[]{Long.toString(id)}
-                , null);
-        if (cursor != null && cursor.moveToFirst()){
-            do {
-                long mediaId = cursor.getLong(cursor.getColumnIndex(MediaStore.Audio.Media._ID));
-                long albumId = cursor.getLong(cursor.getColumnIndex(MediaStore.Audio.Media.ALBUM_ID));
-                long artistId = cursor.getLong(cursor.getColumnIndex(MediaStore.Audio.Media.ARTIST_ID));
-                long audioDuration = cursor.getLong(cursor.getColumnIndex(MediaStore.Audio.Media.DURATION));
-                long audioSize = cursor.getLong(cursor.getColumnIndex(MediaStore.Audio.Media.SIZE));
-                long dateAdded = cursor.getLong(cursor.getColumnIndex(MediaStore.Audio.Media.DATE_ADDED));
-                String title = cursor.getString(cursor.getColumnIndex(MediaStore.Audio.Media.TITLE));
-                String albumTitle = cursor.getString(cursor.getColumnIndex(MediaStore.Audio.Media.ALBUM));
-                String artistTitle = cursor.getString(cursor.getColumnIndex(MediaStore.Audio.Media.ARTIST));
-                String composer = cursor.getString(cursor.getColumnIndex(MediaStore.Audio.Media.COMPOSER));
-                String releaseYear = cursor.getString(cursor.getColumnIndex(MediaStore.Audio.Media.YEAR));
-                String trackNumber = cursor.getString(cursor.getColumnIndex(MediaStore.Audio.Media.TRACK));
-                if (audioDuration >= duration)
-                    list.add(new Audio(mediaId,albumId,artistId,audioDuration,audioSize,dateAdded,title
-                        ,albumTitle,artistTitle,composer,releaseYear,trackNumber));
-            }while (cursor.moveToNext());
-            cursor.close();
-        }
-        return list;
-    }
-
-    /**
-     * Get audio from device with a specific artist name
-     * @param context used to get the resolver
-     * @param name of the artist
-     * @return list of audio
-     * */
-    protected List<Audio> queryArtistSongsWithName(Context context, String name){
-        List<Audio> list = new ArrayList<>();
-        Cursor cursor = context.getApplicationContext().getContentResolver().query(super.getMediaStoreUri()
-                ,super.getAudioProjection(), MediaStore.Audio.Media.ARTIST + "=?", new String[]{name}
-                , null);
-        if (cursor != null && cursor.moveToFirst()){
-            do {
-                long mediaId = cursor.getLong(cursor.getColumnIndex(MediaStore.Audio.Media._ID));
-                long albumId = cursor.getLong(cursor.getColumnIndex(MediaStore.Audio.Media.ALBUM_ID));
-                long artistId = cursor.getLong(cursor.getColumnIndex(MediaStore.Audio.Media.ARTIST_ID));
-                long audioDuration = cursor.getLong(cursor.getColumnIndex(MediaStore.Audio.Media.DURATION));
-                long audioSize = cursor.getLong(cursor.getColumnIndex(MediaStore.Audio.Media.SIZE));
-                long dateAdded = cursor.getLong(cursor.getColumnIndex(MediaStore.Audio.Media.DATE_ADDED));
-                String title = cursor.getString(cursor.getColumnIndex(MediaStore.Audio.Media.TITLE));
-                String albumTitle = cursor.getString(cursor.getColumnIndex(MediaStore.Audio.Media.ALBUM));
-                String artistTitle = cursor.getString(cursor.getColumnIndex(MediaStore.Audio.Media.ARTIST));
-                String composer = cursor.getString(cursor.getColumnIndex(MediaStore.Audio.Media.COMPOSER));
-                String releaseYear = cursor.getString(cursor.getColumnIndex(MediaStore.Audio.Media.YEAR));
-                String trackNumber = cursor.getString(cursor.getColumnIndex(MediaStore.Audio.Media.TRACK));
-                if (audioDuration >= duration)
-                    list.add(new Audio(mediaId,albumId,artistId,audioDuration,audioSize,dateAdded,title
-                        ,albumTitle,artistTitle,composer,releaseYear,trackNumber));
-            }while (cursor.moveToNext());
-            cursor.close();
-        }
-        return list;
-    }
-
-    /**
-     * Get audio from device with a specific ids
-     * @param context used to get the resolver
-     * @param audioIds of the audio
-     * @return list of audio
-     * */
-    protected List<Audio> queryWithIdArray(Context context, String[] audioIds){
-        List<Audio> list = new ArrayList<>();
-        Cursor cursor = context.getApplicationContext().getContentResolver().query(super.getMediaStoreUri()
-                ,super.getAudioProjection(), super.produceWhereClauses(audioIds),null, null);
-        if (cursor != null && cursor.moveToFirst()){
-            do {
-                long mediaId = cursor.getLong(cursor.getColumnIndex(MediaStore.Audio.Media._ID));
-                long albumId = cursor.getLong(cursor.getColumnIndex(MediaStore.Audio.Media.ALBUM_ID));
-                long artistId = cursor.getLong(cursor.getColumnIndex(MediaStore.Audio.Media.ARTIST_ID));
-                long audioDuration = cursor.getLong(cursor.getColumnIndex(MediaStore.Audio.Media.DURATION));
-                long audioSize = cursor.getLong(cursor.getColumnIndex(MediaStore.Audio.Media.SIZE));
-                long dateAdded = cursor.getLong(cursor.getColumnIndex(MediaStore.Audio.Media.DATE_ADDED));
-                String title = cursor.getString(cursor.getColumnIndex(MediaStore.Audio.Media.TITLE));
-                String albumTitle = cursor.getString(cursor.getColumnIndex(MediaStore.Audio.Media.ALBUM));
-                String artistTitle = cursor.getString(cursor.getColumnIndex(MediaStore.Audio.Media.ARTIST));
-                String composer = cursor.getString(cursor.getColumnIndex(MediaStore.Audio.Media.COMPOSER));
-                String releaseYear = cursor.getString(cursor.getColumnIndex(MediaStore.Audio.Media.YEAR));
-                String trackNumber = cursor.getString(cursor.getColumnIndex(MediaStore.Audio.Media.TRACK));
-                if (audioDuration >= duration)
-                    list.add(new Audio(mediaId,albumId,artistId,audioDuration,audioSize,dateAdded,title
-                        ,albumTitle,artistTitle,composer,releaseYear,trackNumber));
-            }while (cursor.moveToNext());
-            cursor.close();
-        }
-        return list;
-    }
-
-    /**
-     * Get audio from device with a specific id
-     * @param context used to get the resolver
-     * @param id of the audio
-     * @return audio, null if not found
-     * */
-    protected Audio queryWithId(Context context, long id){
-        Cursor cursor = context.getApplicationContext().getContentResolver().query(super.getMediaStoreUri()
-                ,super.getAudioProjection(), MediaStore.Audio.Media._ID + "=?", new String[]{Long.toString(id)}
-                , null);
-        if (cursor != null && cursor.moveToFirst()){
-            long mediaId = cursor.getLong(cursor.getColumnIndex(MediaStore.Audio.Media._ID));
+            long id = cursor.getLong(cursor.getColumnIndex(MediaStore.Audio.Media._ID));
             long albumId = cursor.getLong(cursor.getColumnIndex(MediaStore.Audio.Media.ALBUM_ID));
             long artistId = cursor.getLong(cursor.getColumnIndex(MediaStore.Audio.Media.ARTIST_ID));
             long audioDuration = cursor.getLong(cursor.getColumnIndex(MediaStore.Audio.Media.DURATION));
@@ -255,7 +133,7 @@ abstract class DatabaseOperations extends DatabaseScheme{
             String composer = cursor.getString(cursor.getColumnIndex(MediaStore.Audio.Media.COMPOSER));
             String releaseYear = cursor.getString(cursor.getColumnIndex(MediaStore.Audio.Media.YEAR));
             String trackNumber = cursor.getString(cursor.getColumnIndex(MediaStore.Audio.Media.TRACK));
-            Audio audio = new Audio(mediaId,albumId,artistId,audioDuration,audioSize,dateAdded,title
+            Audio audio = new Audio(id,albumId,artistId,audioDuration,audioSize,dateAdded,title
                     ,albumTitle,artistTitle,composer,releaseYear,trackNumber);
             cursor.close();
             return audio;
@@ -264,97 +142,168 @@ abstract class DatabaseOperations extends DatabaseScheme{
     }
 
     /**
-     * Get audio from device with a specific name
-     * @param context used to get the resolver
-     * @param name of the audio
-     * @return audio, null if not found
+     * Get audio from device.
+     * @param  audioAlbumId: album Id
+     * @return {@link Audio}
      * */
-    protected Audio queryWithName(Context context, String name){
+    public List<Audio> getAudioByAlbumId( long audioAlbumId){
+        audioList.clear();
         Cursor cursor = context.getApplicationContext().getContentResolver().query(super.getMediaStoreUri()
-                ,super.getAudioProjection(), MediaStore.Audio.Media.TITLE + "=?", new String[]{name}
-                , null);
+                ,super.getAudioProjection(), MediaStore.Audio.Media.ALBUM_ID + "=?"
+                , new String[]{Long.toString(audioAlbumId)}, MediaStore.Audio.Media.TRACK);
         if (cursor != null && cursor.moveToFirst()){
-            long mediaId = cursor.getLong(cursor.getColumnIndex(MediaStore.Audio.Media._ID));
-            long albumId = cursor.getLong(cursor.getColumnIndex(MediaStore.Audio.Media.ALBUM_ID));
-            long artistId = cursor.getLong(cursor.getColumnIndex(MediaStore.Audio.Media.ARTIST_ID));
-            long audioDuration = cursor.getLong(cursor.getColumnIndex(MediaStore.Audio.Media.DURATION));
-            long audioSize = cursor.getLong(cursor.getColumnIndex(MediaStore.Audio.Media.SIZE));
-            long dateAdded = cursor.getLong(cursor.getColumnIndex(MediaStore.Audio.Media.DATE_ADDED));
-            String title = cursor.getString(cursor.getColumnIndex(MediaStore.Audio.Media.TITLE));
-            String albumTitle = cursor.getString(cursor.getColumnIndex(MediaStore.Audio.Media.ALBUM));
-            String artistTitle = cursor.getString(cursor.getColumnIndex(MediaStore.Audio.Media.ARTIST));
-            String composer = cursor.getString(cursor.getColumnIndex(MediaStore.Audio.Media.COMPOSER));
-            String releaseYear = cursor.getString(cursor.getColumnIndex(MediaStore.Audio.Media.YEAR));
-            String trackNumber = cursor.getString(cursor.getColumnIndex(MediaStore.Audio.Media.TRACK));
-            Audio audio = new Audio(mediaId,albumId,artistId,audioDuration,audioSize,dateAdded,title
-                    ,albumTitle,artistTitle,composer,releaseYear,trackNumber);
+            do {
+                long id = cursor.getLong(cursor.getColumnIndex(MediaStore.Audio.Media._ID));
+                long albumId = cursor.getLong(cursor.getColumnIndex(MediaStore.Audio.Media.ALBUM_ID));
+                long artistId = cursor.getLong(cursor.getColumnIndex(MediaStore.Audio.Media.ARTIST_ID));
+                long audioDuration = cursor.getLong(cursor.getColumnIndex(MediaStore.Audio.Media.DURATION));
+                long audioSize = cursor.getLong(cursor.getColumnIndex(MediaStore.Audio.Media.SIZE));
+                long dateAdded = cursor.getLong(cursor.getColumnIndex(MediaStore.Audio.Media.DATE_ADDED));
+                String title = cursor.getString(cursor.getColumnIndex(MediaStore.Audio.Media.TITLE));
+                String albumTitle = cursor.getString(cursor.getColumnIndex(MediaStore.Audio.Media.ALBUM));
+                String artistTitle = cursor.getString(cursor.getColumnIndex(MediaStore.Audio.Media.ARTIST));
+                String composer = cursor.getString(cursor.getColumnIndex(MediaStore.Audio.Media.COMPOSER));
+                String releaseYear = cursor.getString(cursor.getColumnIndex(MediaStore.Audio.Media.YEAR));
+                String trackNumber = cursor.getString(cursor.getColumnIndex(MediaStore.Audio.Media.TRACK));
+                audioList.add(new Audio(id,albumId,artistId,audioDuration,audioSize,dateAdded,title
+                        ,albumTitle,artistTitle,composer,releaseYear,trackNumber));
+            }while (cursor.moveToNext());
             cursor.close();
-            return audio;
         }
-        return null;
+        return audioList;
     }
 
     /**
-     * Update an audio item
-     * @param context used to get the resolver
-     * @param id of of the audio
-     * @param values : new values to insert
-     * @return true if successful
+     * Get audio from device.
+     * @param  audioArtistId: album Id
+     * @return {@link Audio}
      * */
-    protected boolean update(Context context, long id, ContentValues values){
-        int updateResult = context.getApplicationContext().getContentResolver().update(super.getMediaStoreUri(),values
-                , MediaStore.Audio.Media._ID + "=?", new String[]{Long.toString(id)});
-        return updateResult != 0;
-    }
-
-    /**
-     * Delete an audio item
-     * @param context used to get the resolver
-     * @param id of of the audio
-     * @return true if successful
-     * */
-    protected boolean delete(Context context, long id){
-        int updateResult = context.getApplicationContext().getContentResolver().delete(super.getMediaStoreUri(),
-                MediaStore.Audio.Media._ID + "=?", new String[]{Long.toString(id)});
-        return updateResult != 0;
-    }
-
-    /**
-     * Get the total number of items
-     * */
-    public int getItemCount(Context context){
+    public List<Audio> getAudioByArtistId( long audioArtistId){
+        audioList.clear();
         Cursor cursor = context.getApplicationContext().getContentResolver().query(super.getMediaStoreUri()
-                ,new String[]{MediaStore.Audio.Media._ID}, null,null, null);
-        if (cursor != null){
-            int count = cursor.getCount();
+                ,super.getAudioProjection(), MediaStore.Audio.Media.ARTIST_ID + "=?"
+                , new String[]{Long.toString(audioArtistId)}, MediaStore.Audio.Media.TRACK);
+        if (cursor != null && cursor.moveToFirst()){
+            do {
+                long id = cursor.getLong(cursor.getColumnIndex(MediaStore.Audio.Media._ID));
+                long albumId = cursor.getLong(cursor.getColumnIndex(MediaStore.Audio.Media.ALBUM_ID));
+                long artistId = cursor.getLong(cursor.getColumnIndex(MediaStore.Audio.Media.ARTIST_ID));
+                long audioDuration = cursor.getLong(cursor.getColumnIndex(MediaStore.Audio.Media.DURATION));
+                long audioSize = cursor.getLong(cursor.getColumnIndex(MediaStore.Audio.Media.SIZE));
+                long dateAdded = cursor.getLong(cursor.getColumnIndex(MediaStore.Audio.Media.DATE_ADDED));
+                String title = cursor.getString(cursor.getColumnIndex(MediaStore.Audio.Media.TITLE));
+                String albumTitle = cursor.getString(cursor.getColumnIndex(MediaStore.Audio.Media.ALBUM));
+                String artistTitle = cursor.getString(cursor.getColumnIndex(MediaStore.Audio.Media.ARTIST));
+                String composer = cursor.getString(cursor.getColumnIndex(MediaStore.Audio.Media.COMPOSER));
+                String releaseYear = cursor.getString(cursor.getColumnIndex(MediaStore.Audio.Media.YEAR));
+                String trackNumber = cursor.getString(cursor.getColumnIndex(MediaStore.Audio.Media.TRACK));
+                audioList.add(new Audio(id,albumId,artistId,audioDuration,audioSize,dateAdded,title
+                        ,albumTitle,artistTitle,composer,releaseYear,trackNumber));
+            }while (cursor.moveToNext());
             cursor.close();
-            return count;
         }
-        return 0;
+        return audioList;
+    }
+
+    /**
+     * Get audio from device.
+     * @param  audioAlbumName: album name
+     * @return {@link Audio}
+     * */
+    public List<Audio> getAudioByAlbumName( String audioAlbumName){
+        audioList.clear();
+        Cursor cursor = context.getApplicationContext().getContentResolver().query(super.getMediaStoreUri()
+                ,super.getAudioProjection(), MediaStore.Audio.Media.ALBUM + "=?"
+                , new String[]{audioAlbumName}, MediaStore.Audio.Media.TRACK);
+        if (cursor != null && cursor.moveToFirst()){
+            do {
+                long id = cursor.getLong(cursor.getColumnIndex(MediaStore.Audio.Media._ID));
+                long albumId = cursor.getLong(cursor.getColumnIndex(MediaStore.Audio.Media.ALBUM_ID));
+                long artistId = cursor.getLong(cursor.getColumnIndex(MediaStore.Audio.Media.ARTIST_ID));
+                long audioDuration = cursor.getLong(cursor.getColumnIndex(MediaStore.Audio.Media.DURATION));
+                long audioSize = cursor.getLong(cursor.getColumnIndex(MediaStore.Audio.Media.SIZE));
+                long dateAdded = cursor.getLong(cursor.getColumnIndex(MediaStore.Audio.Media.DATE_ADDED));
+                String title = cursor.getString(cursor.getColumnIndex(MediaStore.Audio.Media.TITLE));
+                String albumTitle = cursor.getString(cursor.getColumnIndex(MediaStore.Audio.Media.ALBUM));
+                String artistTitle = cursor.getString(cursor.getColumnIndex(MediaStore.Audio.Media.ARTIST));
+                String composer = cursor.getString(cursor.getColumnIndex(MediaStore.Audio.Media.COMPOSER));
+                String releaseYear = cursor.getString(cursor.getColumnIndex(MediaStore.Audio.Media.YEAR));
+                String trackNumber = cursor.getString(cursor.getColumnIndex(MediaStore.Audio.Media.TRACK));
+                audioList.add(new Audio(id,albumId,artistId,audioDuration,audioSize,dateAdded,title
+                        ,albumTitle,artistTitle,composer,releaseYear,trackNumber));
+            }while (cursor.moveToNext());
+            cursor.close();
+        }
+        return audioList;
+    }
+
+    /**
+     * Get audio from device.
+     * @param  artistAlbumName: album Id
+     * @return {@link Audio}
+     * */
+    public List<Audio> getAudioByArtistName( String artistAlbumName){
+        audioList.clear();
+        Cursor cursor = context.getApplicationContext().getContentResolver().query(super.getMediaStoreUri()
+                ,super.getAudioProjection(), MediaStore.Audio.Media.ARTIST + "=?"
+                , new String[]{artistAlbumName}, MediaStore.Audio.Media.TRACK);
+        if (cursor != null && cursor.moveToFirst()){
+            do {
+                long id = cursor.getLong(cursor.getColumnIndex(MediaStore.Audio.Media._ID));
+                long albumId = cursor.getLong(cursor.getColumnIndex(MediaStore.Audio.Media.ALBUM_ID));
+                long artistId = cursor.getLong(cursor.getColumnIndex(MediaStore.Audio.Media.ARTIST_ID));
+                long audioDuration = cursor.getLong(cursor.getColumnIndex(MediaStore.Audio.Media.DURATION));
+                long audioSize = cursor.getLong(cursor.getColumnIndex(MediaStore.Audio.Media.SIZE));
+                long dateAdded = cursor.getLong(cursor.getColumnIndex(MediaStore.Audio.Media.DATE_ADDED));
+                String title = cursor.getString(cursor.getColumnIndex(MediaStore.Audio.Media.TITLE));
+                String albumTitle = cursor.getString(cursor.getColumnIndex(MediaStore.Audio.Media.ALBUM));
+                String artistTitle = cursor.getString(cursor.getColumnIndex(MediaStore.Audio.Media.ARTIST));
+                String composer = cursor.getString(cursor.getColumnIndex(MediaStore.Audio.Media.COMPOSER));
+                String releaseYear = cursor.getString(cursor.getColumnIndex(MediaStore.Audio.Media.YEAR));
+                String trackNumber = cursor.getString(cursor.getColumnIndex(MediaStore.Audio.Media.TRACK));
+                audioList.add(new Audio(id,albumId,artistId,audioDuration,audioSize,dateAdded,title
+                        ,albumTitle,artistTitle,composer,releaseYear,trackNumber));
+            }while (cursor.moveToNext());
+            cursor.close();
+        }
+        return audioList;
+    }
+
+    /**
+     * Update audio
+     * @param audioId: audio id
+     * @param values: values to update. see {@link com.lebogang.audiofilemanager.AudioValuesBuilder}
+     * @return true if successful, false otherwise
+     *
+     */
+    public boolean updateAudio(Context context, long audioId, ContentValues values){
+        int updateResult = context.getApplicationContext().getContentResolver().update(getMediaStoreUri(),values
+                , MediaStore.Audio.Media._ID + "=?", new String[]{Long.toString(audioId)});
+        return updateResult > 0;
+    }
+
+    /**
+     * Delete audio from media store database
+     * @param audioId: audio id
+     * @return true if successful, false otherwise
+     *
+     */
+    public boolean deleteAudio(Context context, long audioId){
+        int deleteResults = context.getApplicationContext().getContentResolver().delete(getMediaStoreUri(),
+                MediaStore.Audio.Media._ID + "=?", new String[]{Long.toString(audioId)});
+        return deleteResults > 0;
     }
 
     /**
      * Call this method before you queryItems/getAlbumItems
      * @param order Sort order: Default is {@link MediaStore.Audio.Media#TITLE + " ASC"}
      * */
-    @Override
     public void setSortOrder(String order) {
         this.sortOrder = order;
     }
 
-    @Override
     public void setDuration(long duration) {
         this.duration = duration;
     }
 
-    public abstract List<Audio> getAudio();
-    public abstract Audio getAudioItemWithId(long id);
-    public abstract Audio getAudioItemWithName(String name);
-    public abstract List<Audio> getAlbumAudioWithID(long id);
-    public abstract List<Audio> getAlbumAudioWithName(String name);
-    public abstract List<Audio> getArtistAudioWithID(long id);
-    public abstract List<Audio> getArtistAudioWithName(String name);
-    public abstract List<Audio> getArtistAudioWithIDArray(String[] audioIds);
-    public abstract boolean updateAudio(long id, ContentValues values);
-    public abstract boolean deleteAudio(long id);
 }

@@ -35,6 +35,7 @@ public class AlbumManager extends DatabaseOperations{
     private final MutableLiveData<List<Album>> liveData;
 
     public AlbumManager(Context context) {
+        super(context);
         this.context = context;
         liveData = new MutableLiveData<>();
     }
@@ -49,55 +50,27 @@ public class AlbumManager extends DatabaseOperations{
         lifecycleOwner.getLifecycle().addObserver(getLifecycleObserver());
     }
 
-    @Override
-    public List<Album> getAlbums(){
-        return super.queryItems(context);
-    }
-
-    @Override
-    public Album getAlbumItemWithID(long id){
-        return super.queryItemID(context,id);
-    }
-
-    @Override
-    public Album getAlbumItemWithName(String name){
-        return super.queryItemName(context, name);
-    }
-
-    /**
-     * Some albums can have the same name with different IDs. This will return a list without the
-     * duplicates. However, the song count specified in the album and the actual song count may not match
-     * @param albumList list containing the albums
-     * @return filtered list.
-     * */
-    public static List<Album> groupByName(List<Album> albumList){
-        LinkedHashMap<String, Album> linkedHashMap = new LinkedHashMap<>();
-        for (Album album:albumList){
-            if (!linkedHashMap.containsKey(album.getTitle()))
-                linkedHashMap.put(album.getTitle(), album);
-        }
-        return new ArrayList<>(linkedHashMap.values());
-    }
-
     private DefaultLifecycleObserver getLifecycleObserver(){
         return new DefaultLifecycleObserver() {
+
             @Override
-            public void onCreate(@NonNull LifecycleOwner owner) {
+            public void onStart(@NonNull LifecycleOwner owner) {
                 liveData.observe(owner, albumList -> {
                     callbacks.onQueryComplete(albumList);
                 });
             }
 
             @Override
-            public void onResume(@NonNull LifecycleOwner owner) {
-                liveData.setValue(getAlbums());
-            }
-
-            @Override
-            public void onDestroy(@NonNull LifecycleOwner owner) {
+            public void onStop(@NonNull LifecycleOwner owner) {
                 liveData.removeObservers(owner);
                 owner.getLifecycle().removeObserver(this);
             }
+
+            @Override
+            public void onResume(@NonNull LifecycleOwner owner) {
+                liveData.setValue(getAlbumsGroupedByName());
+            }
+
         };
     }
 }

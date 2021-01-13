@@ -19,7 +19,7 @@ package com.lebogang.audiofilemanager.AlbumManagement;
 import android.net.Uri;
 import android.provider.MediaStore;
 
-public abstract class DatabaseScheme {
+abstract class DatabaseScheme {
     private final String[] albumProjection = {
             MediaStore.Audio.Albums.ALBUM,
             MediaStore.Audio.Albums._ID,
@@ -38,5 +38,4 @@ public abstract class DatabaseScheme {
         return MediaStore.Audio.Albums.EXTERNAL_CONTENT_URI;
     }
 
-    public abstract void setSortOrder(String order);
 }
