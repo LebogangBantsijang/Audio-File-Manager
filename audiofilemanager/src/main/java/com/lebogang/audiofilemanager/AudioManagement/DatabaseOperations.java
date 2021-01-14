@@ -276,7 +276,7 @@ public abstract class DatabaseOperations extends DatabaseScheme{
      * @return true if successful, false otherwise
      *
      */
-    public boolean updateAudio(Context context, long audioId, ContentValues values){
+    public boolean updateAudio(long audioId, ContentValues values){
         int updateResult = context.getApplicationContext().getContentResolver().update(getMediaStoreUri(),values
                 , MediaStore.Audio.Media._ID + "=?", new String[]{Long.toString(audioId)});
         return updateResult > 0;
@@ -288,7 +288,7 @@ public abstract class DatabaseOperations extends DatabaseScheme{
      * @return true if successful, false otherwise
      *
      */
-    public boolean deleteAudio(Context context, long audioId){
+    public boolean deleteAudio(long audioId){
         int deleteResults = context.getApplicationContext().getContentResolver().delete(getMediaStoreUri(),
                 MediaStore.Audio.Media._ID + "=?", new String[]{Long.toString(audioId)});
         return deleteResults > 0;
