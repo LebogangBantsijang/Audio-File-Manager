@@ -24,20 +24,16 @@ import java.util.List;
 public class Genre extends Media{
     private final long id;
     private final String name;
-    private final List<String> audioIds;
+    private final List<Long> audioIds;
 
-    public Genre(long id, String name, List<String> audioIds) {
+    public Genre(long id, String name, List<Long> audioIds) {
         this.id = id;
         this.name = name;
         this.audioIds = audioIds;
     }
 
     public List<Long> getAudioIds() {
-        List<Long> list = new ArrayList<>();
-        for (String id:audioIds){
-            list.add(Long.parseLong(id));
-        }
-        return list;
+        return audioIds;
     }
 
     @Override
@@ -66,8 +62,20 @@ public class Genre extends Media{
     protected Genre(Parcel in) {
         this.id = in.readLong();
         this.name = in.readString();
-        this.audioIds = in.createStringArrayList();
+        this.audioIds = in.createTypedArrayList(LONG_CREATOR);
     }
+
+    public static final Creator<Long> LONG_CREATOR = new Creator<Long>() {
+        @Override
+        public Long createFromParcel(Parcel source) {
+            return source.readLong();
+        }
+
+        @Override
+        public Long[] newArray(int size) {
+            return new Long[size];
+        }
+    };
 
     public static final Creator<Genre> CREATOR = new Creator<Genre>() {
         @Override
