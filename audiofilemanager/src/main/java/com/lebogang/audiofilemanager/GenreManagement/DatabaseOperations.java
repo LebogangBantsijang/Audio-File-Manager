@@ -48,8 +48,7 @@ public abstract class DatabaseOperations extends DatabaseScheme {
             do {
                 long genreId = cursor.getLong(cursor.getColumnIndex(MediaStore.Audio.Genres._ID));
                 String title = cursor.getString(cursor.getColumnIndex(MediaStore.Audio.Genres.NAME));
-                getAudioIds(genreId);
-                genreList.add(new Genre(genreId, title, audioIds));
+                genreList.add(new Genre(genreId, title, getAudioIds(genreId)));
             }while (cursor.moveToNext());
             cursor.close();
         }
@@ -76,8 +75,7 @@ public abstract class DatabaseOperations extends DatabaseScheme {
         if (cursor!= null && cursor.moveToFirst()){
             long genreId = cursor.getLong(cursor.getColumnIndex(MediaStore.Audio.Genres._ID));
             String title = cursor.getString(cursor.getColumnIndex(MediaStore.Audio.Genres.NAME));
-            getAudioIds(genreId);
-            Genre genre = new Genre(genreId, title, audioIds);
+            Genre genre = new Genre(genreId, title, getAudioIds(genreId));
             cursor.close();
             return genre;
         }
@@ -96,26 +94,25 @@ public abstract class DatabaseOperations extends DatabaseScheme {
         if (cursor!= null && cursor.moveToFirst()){
             long genreId = cursor.getLong(cursor.getColumnIndex(MediaStore.Audio.Genres._ID));
             String title = cursor.getString(cursor.getColumnIndex(MediaStore.Audio.Genres.NAME));
-            getAudioIds(genreId);
-            Genre genre = new Genre(genreId, title, audioIds);
+            Genre genre = new Genre(genreId, title, getAudioIds(genreId));
             cursor.close();
             return genre;
         }
         return null;
     }
 
-    private List<String> getAudioIds(long id){
-        audioIds.clear();
+    private List<Long> getAudioIds(long id){
+        ArrayList<Long> list = new ArrayList<>();
         Cursor cursor = context.getContentResolver().query(
                 MediaStore.Audio.Genres.Members.getContentUri(MediaStore.VOLUME_EXTERNAL, id)
                 , new String[]{MediaStore.Audio.Genres.Members.AUDIO_ID}, null, null, null);
         if (cursor!= null && cursor.moveToFirst()){
             do {
-                String audioId = cursor.getString(cursor.getColumnIndex(MediaStore.Audio.Genres.Members.AUDIO_ID));
-                audioIds.add(audioId);
+                long audioId = cursor.getLong(cursor.getColumnIndex(MediaStore.Audio.Genres.Members.AUDIO_ID));
+                list.add(audioId);
             }while (cursor.moveToNext());
             cursor.close();
         }
-        return audioIds;
+        return list;
     }
 }
