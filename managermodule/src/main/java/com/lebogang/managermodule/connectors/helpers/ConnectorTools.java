@@ -20,8 +20,6 @@ import android.annotation.SuppressLint;
 import android.net.Uri;
 import android.provider.MediaStore;
 
-import com.lebogang.managermodule.Models.Media;
-
 public class ConnectorTools {
     @SuppressLint("InlinedApi")
     public static final String[] AUDIO_PROJECTION = {
