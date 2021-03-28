@@ -20,7 +20,7 @@ allprojects {
 
 ```gradle
 dependencies {
-    implementation 'com.github.LebogangBantsijang:Android-File-Manager:v1.1.5'
+    implementation 'com.github.LebogangBantsijang:Android-File-Manager:v1.0.2'
 }
 ```
 ## Usage
