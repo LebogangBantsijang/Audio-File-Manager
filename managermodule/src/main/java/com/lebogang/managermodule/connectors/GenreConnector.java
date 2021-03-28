@@ -19,7 +19,6 @@ package com.lebogang.managermodule.connectors;
 import android.content.ContentResolver;
 import android.database.ContentObserver;
 import android.database.Cursor;
-import android.provider.MediaStore.Audio;
 
 import com.lebogang.managermodule.connectors.helpers.ConnectorTools;
 import com.lebogang.managermodule.connectors.helpers.GenreDatabaseInterface;
@@ -28,6 +27,11 @@ import com.lebogang.managermodule.data.helpers.UriHelper;
 
 import java.util.Collections;
 import java.util.List;
+
+import static android.provider.MediaStore.Audio.Genres.Members.AUDIO_ID;
+import static android.provider.MediaStore.Audio.Genres.Members.GENRE_ID;
+import static android.provider.MediaStore.Audio.Genres.NAME;
+import static android.provider.MediaStore.Audio.Genres._ID;
 
 public class GenreConnector implements GenreDatabaseInterface {
     private final ContentResolver contentResolver;
@@ -47,14 +51,14 @@ public class GenreConnector implements GenreDatabaseInterface {
     @Override
     public List<Genre> getGenre(String name) {
         Cursor cursor = contentResolver.query(ConnectorTools.GENRE_EXTERNAL_URI, ConnectorTools.GENRE_PROJECTION
-                , Audio.Genres.NAME, new String[]{name}, ConnectorTools.DEFAULT_GENRE_SORT_ORDER);
+                , NAME, new String[]{name}, ConnectorTools.DEFAULT_GENRE_SORT_ORDER);
         return iterateCursor(cursor);
     }
 
     @Override
     public String[] getGenreAudioIds(long id) {
         Cursor cursor = contentResolver.query(ConnectorTools.getGenreAudioExternalUri(id),ConnectorTools.GENRE_AUDIO_PROJECTION
-                , Audio.Genres.Members.GENRE_ID + "=?", new String[]{Long.toString(id)}, null);
+                , GENRE_ID + "=?", new String[]{Long.toString(id)}, null);
         return iterateCursorIds(cursor);
     }
 
@@ -87,7 +91,7 @@ public class GenreConnector implements GenreDatabaseInterface {
         int counter = 0;
         if (cursor.moveToFirst()){
             do {
-                long audioId = cursor.getLong(cursor.getColumnIndex(Audio.Genres.Members.AUDIO_ID));
+                long audioId = cursor.getLong(cursor.getColumnIndex(AUDIO_ID));
                 audioIdArray[counter] = Long.toString(audioId);
                 counter++;
             }while (cursor.moveToNext());
@@ -102,10 +106,10 @@ public class GenreConnector implements GenreDatabaseInterface {
             return genreList;
         if (cursor.moveToFirst()){
             do {
-                long id = cursor.getLong(cursor.getColumnIndex(Audio.Genres._ID));
+                long id = cursor.getLong(cursor.getColumnIndex(_ID));
                 Genre genre = new Genre.Builder()
                         .setId(id)
-                        .setTitle(cursor.getString(cursor.getColumnIndex(Audio.Genres.NAME)))
+                        .setTitle(cursor.getString(cursor.getColumnIndex(NAME)))
                         .setContentUri(UriHelper.createContentUri(ConnectorTools.GENRE_EXTERNAL_URI, id))
                         .build();
                 genreList.add(genre);

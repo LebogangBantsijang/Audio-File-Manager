@@ -32,6 +32,10 @@ import java.util.Collections;
 import java.util.LinkedHashMap;
 import java.util.List;
 
+import static android.provider.MediaStore.Audio.Artists.ARTIST;
+import static android.provider.MediaStore.Audio.Artists.NUMBER_OF_ALBUMS;
+import static android.provider.MediaStore.Audio.Artists.NUMBER_OF_TRACKS;
+
 public class ArtistConnector implements ArtistDatabaseInterface {
     private final ContentResolver contentResolver;
     private ContentObserver contentObserver;
@@ -57,7 +61,7 @@ public class ArtistConnector implements ArtistDatabaseInterface {
     @Override
     public List<Artist> getArtists(String name) {
         Cursor cursor = contentResolver.query(ConnectorTools.ARTIST_EXTERNAL_URI, ConnectorTools.ARTIST_PROJECTION
-                , Artists.ARTIST + "=?", new String[]{name}, ConnectorTools.DEFAULT_ARTIST_SORT_ORDER);
+                , ARTIST + "=?", new String[]{name}, ConnectorTools.DEFAULT_ARTIST_SORT_ORDER);
         return iterateCursor(cursor);
     }
 
@@ -89,9 +93,9 @@ public class ArtistConnector implements ArtistDatabaseInterface {
                 long id = cursor.getLong(cursor.getColumnIndex(Artists._ID));
                 Artist artist = new Artist.Builder()
                         .setId(id)
-                        .setArtistName(cursor.getString(cursor.getColumnIndex(Artists.ARTIST)))
-                        .setNumberOfAlbums(cursor.getInt(cursor.getColumnIndex(Artists.NUMBER_OF_ALBUMS)))
-                        .setNumberOfSongs(cursor.getInt(cursor.getColumnIndex(Artists.NUMBER_OF_TRACKS)))
+                        .setArtistName(cursor.getString(cursor.getColumnIndex(ARTIST)))
+                        .setNumberOfAlbums(cursor.getInt(cursor.getColumnIndex(NUMBER_OF_ALBUMS)))
+                        .setNumberOfSongs(cursor.getInt(cursor.getColumnIndex(NUMBER_OF_TRACKS)))
                         .setContentUri(UriHelper.createContentUri(ConnectorTools.ARTIST_EXTERNAL_URI, id))
                         .build();
                 artistLinkedHashMap.put(artist.getArtistName(), artist);

@@ -32,13 +32,14 @@ import java.util.Collections;
 import java.util.LinkedHashMap;
 import java.util.List;
 
-import static android.provider.MediaStore.Audio.AlbumColumns.ALBUM;
-import static android.provider.MediaStore.Audio.AlbumColumns.ALBUM_ID;
-import static android.provider.MediaStore.Audio.AlbumColumns.ARTIST;
-import static android.provider.MediaStore.Audio.AlbumColumns.FIRST_YEAR;
-import static android.provider.MediaStore.Audio.AlbumColumns.LAST_YEAR;
-import static android.provider.MediaStore.Audio.AlbumColumns.NUMBER_OF_SONGS;
-import static android.provider.MediaStore.Audio.AlbumColumns.NUMBER_OF_SONGS_FOR_ARTIST;
+import static android.provider.MediaStore.Audio.Albums._ID;
+import static android.provider.MediaStore.Audio.Albums.ALBUM;
+import static android.provider.MediaStore.Audio.Albums.ALBUM_ID;
+import static android.provider.MediaStore.Audio.Albums.ARTIST;
+import static android.provider.MediaStore.Audio.Albums.FIRST_YEAR;
+import static android.provider.MediaStore.Audio.Albums.LAST_YEAR;
+import static android.provider.MediaStore.Audio.Albums.NUMBER_OF_SONGS;
+import static android.provider.MediaStore.Audio.Albums.NUMBER_OF_SONGS_FOR_ARTIST;
 
 public class AlbumConnector implements AlbumDatabaseInterface {
     private final ContentResolver contentResolver;
@@ -101,7 +102,7 @@ public class AlbumConnector implements AlbumDatabaseInterface {
         if (cursor.moveToFirst()){
             do {
                 long albumId = cursor.getLong(cursor.getColumnIndex(ALBUM_ID));
-                long id = cursor.getLong(cursor.getColumnIndex(MediaStore.Audio.Albums._ID));
+                long id = cursor.getLong(cursor.getColumnIndex(_ID));
                 Album album = new Album.Builder()
                         .setAlbumId(id)
                         .setAlbumId(albumId)

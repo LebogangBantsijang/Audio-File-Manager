@@ -34,6 +34,20 @@ import com.lebogang.managermodule.data.helpers.UriHelper;
 import java.util.Collections;
 import java.util.List;
 
+import static android.provider.MediaStore.Audio.Media.ARTIST_ID;
+import static android.provider.MediaStore.Audio.Media.IS_MUSIC;
+import static android.provider.MediaStore.Audio.Media.TRACK;
+import static android.provider.MediaStore.Audio.Media.YEAR;
+import static android.provider.MediaStore.Audio.Media.ALBUM;
+import static android.provider.MediaStore.Audio.Media.ARTIST;
+import static android.provider.MediaStore.Audio.Media.COMPOSER;
+import static android.provider.MediaStore.Audio.Media.DATE_ADDED;
+import static android.provider.MediaStore.Audio.Media.DATE_MODIFIED;
+import static android.provider.MediaStore.Audio.Media.DATE_TAKEN;
+import static android.provider.MediaStore.Audio.Media.DISPLAY_NAME;
+import static android.provider.MediaStore.Audio.Media.DURATION;
+import static android.provider.MediaStore.Audio.Media.TITLE;
+
 public class AudioConnector implements AudioDatabaseInterface {
     private final ContentResolver contentResolver;
     private ContentObserver contentObserver;
@@ -45,7 +59,7 @@ public class AudioConnector implements AudioDatabaseInterface {
     @Override
     public List<Audio> getAudio() {
         Cursor cursor = contentResolver.query(ConnectorTools.AUDIO_EXTERNAL_URI, ConnectorTools.AUDIO_PROJECTION
-                , null, new String[]{Media.IS_MUSIC}, ConnectorTools.DEFAULT_AUDIO_SORT_ORDER);
+                , null, new String[]{IS_MUSIC}, ConnectorTools.DEFAULT_AUDIO_SORT_ORDER);
         return iterateCursor(cursor);
     }
 
@@ -53,7 +67,7 @@ public class AudioConnector implements AudioDatabaseInterface {
     @SuppressLint("InlinedApi")
     public List<Audio> getAudioAboveDuration(long duration) {
         Cursor cursor = contentResolver.query(ConnectorTools.AUDIO_EXTERNAL_URI, ConnectorTools.AUDIO_PROJECTION
-                , Media.DURATION + ">?", new String[]{Long.toString(duration),Media.IS_MUSIC}
+                , DURATION + ">?", new String[]{Long.toString(duration), IS_MUSIC}
                 , ConnectorTools.DEFAULT_AUDIO_SORT_ORDER);
         return iterateCursor(cursor);
     }
@@ -61,7 +75,7 @@ public class AudioConnector implements AudioDatabaseInterface {
     @Override
     public List<Audio> getAudio(long id) {
         Cursor cursor = contentResolver.query(ConnectorTools.AUDIO_EXTERNAL_URI, ConnectorTools.AUDIO_PROJECTION
-                , Media._ID + "=?", new String[]{Long.toString(id),Media.IS_MUSIC}
+                , Media._ID + "=?", new String[]{Long.toString(id), IS_MUSIC}
                 , ConnectorTools.DEFAULT_AUDIO_SORT_ORDER);
         return iterateCursor(cursor);
     }
@@ -69,7 +83,7 @@ public class AudioConnector implements AudioDatabaseInterface {
     @Override
     public List<Audio> getAudio(@NonNull String name) {
         Cursor cursor = contentResolver.query(ConnectorTools.AUDIO_EXTERNAL_URI, ConnectorTools.AUDIO_PROJECTION
-                , Media.TITLE + "=?", new String[]{name,Media.IS_MUSIC}
+                , TITLE + "=?", new String[]{name, IS_MUSIC}
                 , ConnectorTools.DEFAULT_AUDIO_SORT_ORDER);
         return iterateCursor(cursor);
     }
@@ -77,7 +91,7 @@ public class AudioConnector implements AudioDatabaseInterface {
     @Override
     public List<Audio> getAudio(@NonNull Uri uri) {
         Cursor cursor = contentResolver.query(uri, ConnectorTools.AUDIO_PROJECTION
-                , null, new String[]{Media.IS_MUSIC}
+                , null, new String[]{IS_MUSIC}
                 , ConnectorTools.DEFAULT_AUDIO_SORT_ORDER);
         return iterateCursor(cursor);
     }
@@ -132,18 +146,18 @@ public class AudioConnector implements AudioDatabaseInterface {
                 Audio audio = new Audio.Builder()
                         .setId(id)
                         .setAlbumId(albumId)
-                        .setArtistId(cursor.getLong(cursor.getColumnIndex(Media.ARTIST_ID)))
-                        .setDuration(cursor.getLong(cursor.getColumnIndex(Media.DURATION)))
-                        .setDateAdded(cursor.getLong(cursor.getColumnIndex(Media.DATE_ADDED)))
-                        .setDateModified(cursor.getLong(cursor.getColumnIndex(Media.DATE_MODIFIED)))
-                        .setDateTaken(cursor.getLong(cursor.getColumnIndex(Media.DATE_TAKEN)))
-                        .setTitle(cursor.getString(cursor.getColumnIndex(Media.TITLE)))
-                        .setDisplayName(cursor.getString(cursor.getColumnIndex(Media.DISPLAY_NAME)))
-                        .setAlbumTitle(cursor.getString(cursor.getColumnIndex(Media.ALBUM)))
-                        .setArtistTitle(cursor.getString(cursor.getColumnIndex(Media.ARTIST)))
-                        .setComposer(cursor.getString(cursor.getColumnIndex(Media.COMPOSER)))
-                        .setReleaseYear(cursor.getString(cursor.getColumnIndex(Media.YEAR)))
-                        .setTrackNumber(cursor.getString(cursor.getColumnIndex(Media.TRACK)))
+                        .setArtistId(cursor.getLong(cursor.getColumnIndex(ARTIST_ID)))
+                        .setDuration(cursor.getLong(cursor.getColumnIndex(DURATION)))
+                        .setDateAdded(cursor.getLong(cursor.getColumnIndex(DATE_ADDED)))
+                        .setDateModified(cursor.getLong(cursor.getColumnIndex(DATE_MODIFIED)))
+                        .setDateTaken(cursor.getLong(cursor.getColumnIndex(DATE_TAKEN)))
+                        .setTitle(cursor.getString(cursor.getColumnIndex(TITLE)))
+                        .setDisplayName(cursor.getString(cursor.getColumnIndex(DISPLAY_NAME)))
+                        .setAlbumTitle(cursor.getString(cursor.getColumnIndex(ALBUM)))
+                        .setArtistTitle(cursor.getString(cursor.getColumnIndex(ARTIST)))
+                        .setComposer(cursor.getString(cursor.getColumnIndex(COMPOSER)))
+                        .setReleaseYear(cursor.getString(cursor.getColumnIndex(YEAR)))
+                        .setTrackNumber(cursor.getString(cursor.getColumnIndex(TRACK)))
                         .setAlbumArtUri(UriHelper.createAlbumArtUri(albumId))
                         .setContentUri(UriHelper.createContentUri(ConnectorTools.AUDIO_EXTERNAL_URI, id))
                         .build();
