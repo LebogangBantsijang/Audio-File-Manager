@@ -32,7 +32,7 @@ dependencies {
 How to get Audio and Album information from the external storage
 
 ```java
-MediaMamager mediaManager = new MediaMamager(context);
+MediaManager mediaManager = new MediaManager(context);
 List<Audio> audioList = mediaManager.getAudio();
 List<Album> albumList = mediaManager.getAlbums();
 List<Artist> audioList = mediaManager.getArtists();
