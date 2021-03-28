@@ -14,7 +14,7 @@
  *
  */
 
-package com.lebogang.managermodule.data.helpers;
+package com.lebogang.filemanager.data.helpers;
 
 import android.content.ContentUris;
 import android.net.Uri;

@@ -14,26 +14,27 @@
  *
  */
 
-package com.lebogang.managermodule.connectors.helpers;
+package com.lebogang.filemanager.connectors.helpers;
 
-import android.content.ContentValues;
 import android.database.ContentObserver;
 
-import com.lebogang.managermodule.data.Artist;
+import com.lebogang.filemanager.data.Genre;
 
 import java.util.List;
 
-public interface ArtistDatabaseInterface {
+public interface GenreDatabaseInterface {
 
-    List<Artist> getArtists();
+    List<Genre> getGenre();
 
-    List<Artist> getArtists(long id);
+    List<Genre> getGenre(String name);
 
-    List<Artist> getArtists(String name);
+    String[] getGenreAudioIds(long id);
 
-    int updateArtist(long id, ContentValues values);
+    void observeGenreChanges(ContentObserver contentObserver);
 
-    void observeArtistChanges( ContentObserver contentObserver);
+    void observeGenreAudioChanges(long genreId,ContentObserver contentObserver);
 
-    void stopArtistObserving();
+    void stopGenreObserving();
+
+    void stopGenreAudioObserving();
 }

@@ -14,9 +14,26 @@
  *
  */
 
-package com.lebogang.managermodule.data;
+package com.lebogang.filemanager.connectors.helpers;
 
-class Image {
-    public Image() {
-    }
+import android.content.ContentValues;
+import android.database.ContentObserver;
+
+import com.lebogang.filemanager.data.Artist;
+
+import java.util.List;
+
+public interface ArtistDatabaseInterface {
+
+    List<Artist> getArtists();
+
+    List<Artist> getArtists(long id);
+
+    List<Artist> getArtists(String name);
+
+    int updateArtist(long id, ContentValues values);
+
+    void observeArtistChanges( ContentObserver contentObserver);
+
+    void stopArtistObserving();
 }

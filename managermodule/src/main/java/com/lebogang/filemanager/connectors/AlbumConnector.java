@@ -14,18 +14,17 @@
  *
  */
 
-package com.lebogang.managermodule.connectors;
+package com.lebogang.filemanager.connectors;
 
 import android.content.ContentResolver;
 import android.content.ContentValues;
 import android.database.ContentObserver;
 import android.database.Cursor;
-import android.provider.MediaStore;
 
-import com.lebogang.managermodule.connectors.helpers.AlbumDatabaseInterface;
-import com.lebogang.managermodule.connectors.helpers.ConnectorTools;
-import com.lebogang.managermodule.data.Album;
-import com.lebogang.managermodule.data.helpers.UriHelper;
+import com.lebogang.filemanager.connectors.helpers.AlbumDatabaseInterface;
+import com.lebogang.filemanager.connectors.helpers.ConnectorTools;
+import com.lebogang.filemanager.data.Album;
+import com.lebogang.filemanager.data.helpers.UriHelper;
 
 import java.util.ArrayList;
 import java.util.Collections;
@@ -101,18 +100,15 @@ public class AlbumConnector implements AlbumDatabaseInterface {
         LinkedHashMap<String, Album> albumLinkedHashMap = new LinkedHashMap<>();
         if (cursor.moveToFirst()){
             do {
-                long albumId = cursor.getLong(cursor.getColumnIndex(ALBUM_ID));
                 long id = cursor.getLong(cursor.getColumnIndex(_ID));
                 Album album = new Album.Builder()
-                        .setAlbumId(id)
-                        .setAlbumId(albumId)
+                        .setId(id)
                         .setAlbumName(cursor.getString(cursor.getColumnIndex(ALBUM)))
                         .setArtist(cursor.getString(cursor.getColumnIndex(ARTIST)))
                         .setFirstYear(cursor.getString(cursor.getColumnIndex(FIRST_YEAR)))
                         .setLastYear(cursor.getString(cursor.getColumnIndex(LAST_YEAR)))
                         .setNumberOfSongs(cursor.getInt(cursor.getColumnIndex(NUMBER_OF_SONGS)))
-                        .setNumberOfSongsForArtist(cursor.getInt(cursor.getColumnIndex(NUMBER_OF_SONGS_FOR_ARTIST)))
-                        .setAlbumArtUri(UriHelper.createAlbumArtUri(albumId))
+                        .setAlbumArtUri(UriHelper.createAlbumArtUri(id))
                         .setContentUri(UriHelper.createContentUri(ConnectorTools.ALBUM_EXTERNAL_URI, id))
                         .build();
                 albumLinkedHashMap.put(album.getAlbumName(), album);

@@ -14,7 +14,7 @@
  *
  */
 
-package com.lebogang.managermodule.data;
+package com.lebogang.filemanager.data;
 
 import android.net.Uri;
 

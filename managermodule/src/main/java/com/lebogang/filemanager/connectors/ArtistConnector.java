@@ -14,7 +14,7 @@
  *
  */
 
-package com.lebogang.managermodule.connectors;
+package com.lebogang.filemanager.connectors;
 
 import android.content.ContentResolver;
 import android.content.ContentValues;
@@ -22,10 +22,10 @@ import android.database.ContentObserver;
 import android.database.Cursor;
 import android.provider.MediaStore.Audio.Artists;
 
-import com.lebogang.managermodule.connectors.helpers.ArtistDatabaseInterface;
-import com.lebogang.managermodule.connectors.helpers.ConnectorTools;
-import com.lebogang.managermodule.data.Artist;
-import com.lebogang.managermodule.data.helpers.UriHelper;
+import com.lebogang.filemanager.connectors.helpers.ArtistDatabaseInterface;
+import com.lebogang.filemanager.connectors.helpers.ConnectorTools;
+import com.lebogang.filemanager.data.Artist;
+import com.lebogang.filemanager.data.helpers.UriHelper;
 
 import java.util.ArrayList;
 import java.util.Collections;

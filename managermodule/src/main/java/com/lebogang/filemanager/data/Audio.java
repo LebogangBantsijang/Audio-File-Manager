@@ -14,7 +14,7 @@
  *
  */
 
-package com.lebogang.managermodule.data;
+package com.lebogang.filemanager.data;
 
 import android.net.Uri;
 
@@ -24,11 +24,8 @@ public class Audio {
     private final long artistId;
     private final long duration;
     private final long size;
-    private final long dateAdded;
     private final long dateModified;
-    private final long dateTaken;
     private final String title;
-    private final String displayName;
     private final String albumTitle;
     private final String artistTitle;
     private final String composer;
@@ -37,20 +34,17 @@ public class Audio {
     private final Uri albumArtUri;
     private final Uri contentUri;
 
-    private Audio(long id, long albumId, long artistId, long duration, long size, long dateAdded
-            , long dateModified, long dateTaken, String title, String displayName, String albumTitle
-            , String artistTitle, String composer, String releaseYear, String trackNumber, Uri albumArtUri
+    private Audio(long id, long albumId, long artistId, long duration, long size, long dateModified
+            , String title, String albumTitle, String artistTitle, String composer, String releaseYear
+            , String trackNumber, Uri albumArtUri
             ,Uri contentUri) {
         this.id = id;
         this.albumId = albumId;
         this.artistId = artistId;
         this.duration = duration;
         this.size = size;
-        this.dateAdded = dateAdded;
         this.dateModified = dateModified;
-        this.dateTaken = dateTaken;
         this.title = title;
-        this.displayName = displayName;
         this.albumTitle = albumTitle;
         this.artistTitle = artistTitle;
         this.composer = composer;
@@ -80,24 +74,12 @@ public class Audio {
         return size;
     }
 
-    public long getDateAdded() {
-        return dateAdded;
-    }
-
     public long getDateModified() {
         return dateModified;
     }
 
-    public long getDateTaken() {
-        return dateTaken;
-    }
-
     public String getTitle() {
         return title;
-    }
-
-    public String getDisplayName() {
-        return displayName;
     }
 
     public String getAlbumTitle() {
@@ -134,11 +116,8 @@ public class Audio {
         private long artistId;
         private long duration;
         private long size;
-        private long dateAdded;
         private long dateModified;
-        private long dateTaken;
         private String title;
-        private String displayName;
         private String albumTitle;
         private String artistTitle;
         private String composer;
@@ -175,28 +154,13 @@ public class Audio {
             return this;
         }
 
-        public Builder setDateAdded(long dateAdded) {
-            this.dateAdded = dateAdded;
-            return this;
-        }
-
         public Builder setDateModified(long dateModified) {
             this.dateModified = dateModified;
             return this;
         }
 
-        public Builder setDateTaken(long dateTaken) {
-            this.dateTaken = dateTaken;
-            return this;
-        }
-
         public Builder setTitle(String title) {
             this.title = title;
-            return this;
-        }
-
-        public Builder setDisplayName(String displayName) {
-            this.displayName = displayName;
             return this;
         }
 
@@ -236,8 +200,8 @@ public class Audio {
         }
 
         public Audio build() throws NullPointerException{
-            return new Audio(id,albumId,artistId,duration,size,dateAdded,dateModified,dateTaken
-                    ,title,displayName,albumTitle,artistTitle,composer,releaseYear,trackNumber
+            return new Audio(id,albumId,artistId,duration,size,dateModified
+                    ,title,albumTitle,artistTitle,composer,releaseYear,trackNumber
                     ,albumArtUri, contentUri);
         }
     }

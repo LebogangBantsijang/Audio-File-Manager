@@ -14,7 +14,7 @@
  *
  */
 
-package com.lebogang.managermodule.managers;
+package com.lebogang.filemanager.managers;
 
 import android.content.ContentResolver;
 import android.content.ContentValues;
@@ -24,30 +24,30 @@ import android.net.Uri;
 
 import androidx.annotation.NonNull;
 
-import com.lebogang.managermodule.connectors.AlbumConnector;
-import com.lebogang.managermodule.connectors.ArtistConnector;
-import com.lebogang.managermodule.connectors.AudioConnector;
-import com.lebogang.managermodule.connectors.GenreConnector;
-import com.lebogang.managermodule.connectors.helpers.AlbumDatabaseInterface;
-import com.lebogang.managermodule.connectors.helpers.ArtistDatabaseInterface;
-import com.lebogang.managermodule.connectors.helpers.AudioDatabaseInterface;
-import com.lebogang.managermodule.connectors.helpers.ConnectorTools;
-import com.lebogang.managermodule.connectors.helpers.GenreDatabaseInterface;
-import com.lebogang.managermodule.connectors.helpers.SortTypes;
-import com.lebogang.managermodule.data.Album;
-import com.lebogang.managermodule.data.Artist;
-import com.lebogang.managermodule.data.Audio;
-import com.lebogang.managermodule.data.Genre;
+import com.lebogang.filemanager.connectors.AlbumConnector;
+import com.lebogang.filemanager.connectors.ArtistConnector;
+import com.lebogang.filemanager.connectors.AudioConnector;
+import com.lebogang.filemanager.connectors.GenreConnector;
+import com.lebogang.filemanager.connectors.helpers.AlbumDatabaseInterface;
+import com.lebogang.filemanager.connectors.helpers.ArtistDatabaseInterface;
+import com.lebogang.filemanager.connectors.helpers.AudioDatabaseInterface;
+import com.lebogang.filemanager.connectors.helpers.ConnectorTools;
+import com.lebogang.filemanager.connectors.helpers.GenreDatabaseInterface;
+import com.lebogang.filemanager.connectors.helpers.SortTypes;
+import com.lebogang.filemanager.data.Album;
+import com.lebogang.filemanager.data.Artist;
+import com.lebogang.filemanager.data.Audio;
+import com.lebogang.filemanager.data.Genre;
 
 import java.util.List;
 
-public class AudioManager implements AudioDatabaseInterface, AlbumDatabaseInterface, ArtistDatabaseInterface, GenreDatabaseInterface {
+public class MediaManager implements AudioDatabaseInterface, AlbumDatabaseInterface, ArtistDatabaseInterface, GenreDatabaseInterface {
     private final AudioConnector audioConnector;
     private final AlbumConnector albumConnector;
     private final ArtistConnector artistConnector;
     private final GenreConnector genreConnector;
 
-    public AudioManager(Context applicationContext) {
+    public MediaManager(Context applicationContext) {
         ContentResolver contentResolver = applicationContext.getApplicationContext().getContentResolver();
         audioConnector = new AudioConnector(contentResolver);
         albumConnector = new AlbumConnector(contentResolver);

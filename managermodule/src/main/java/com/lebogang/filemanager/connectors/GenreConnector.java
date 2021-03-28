@@ -14,17 +14,18 @@
  *
  */
 
-package com.lebogang.managermodule.connectors;
+package com.lebogang.filemanager.connectors;
 
 import android.content.ContentResolver;
 import android.database.ContentObserver;
 import android.database.Cursor;
 
-import com.lebogang.managermodule.connectors.helpers.ConnectorTools;
-import com.lebogang.managermodule.connectors.helpers.GenreDatabaseInterface;
-import com.lebogang.managermodule.data.Genre;
-import com.lebogang.managermodule.data.helpers.UriHelper;
+import com.lebogang.filemanager.connectors.helpers.ConnectorTools;
+import com.lebogang.filemanager.connectors.helpers.GenreDatabaseInterface;
+import com.lebogang.filemanager.data.Genre;
+import com.lebogang.filemanager.data.helpers.UriHelper;
 
+import java.util.ArrayList;
 import java.util.Collections;
 import java.util.List;
 
@@ -101,9 +102,9 @@ public class GenreConnector implements GenreDatabaseInterface {
     }
 
     private List<Genre> iterateCursor(Cursor cursor){
-        List<Genre> genreList = Collections.emptyList();
         if (cursor == null)
-            return genreList;
+            return Collections.emptyList();
+        List<Genre> genreList = new ArrayList<>();
         if (cursor.moveToFirst()){
             do {
                 long id = cursor.getLong(cursor.getColumnIndex(_ID));

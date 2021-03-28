@@ -14,27 +14,38 @@
  *
  */
 
-package com.lebogang.managermodule.connectors.helpers;
+package com.lebogang.filemanager.connectors.helpers;
 
+import android.content.ContentValues;
 import android.database.ContentObserver;
+import android.net.Uri;
 
-import com.lebogang.managermodule.data.Genre;
+import androidx.annotation.NonNull;
+
+import com.lebogang.filemanager.data.Audio;
 
 import java.util.List;
 
-public interface GenreDatabaseInterface {
+public interface AudioDatabaseInterface {
 
-    List<Genre> getGenre();
+    List<Audio> getAudio();
 
-    List<Genre> getGenre(String name);
+    List<Audio> getAudio(long id);
 
-    String[] getGenreAudioIds(long id);
+    List<Audio> getAudio(@NonNull String name);
 
-    void observeGenreChanges(ContentObserver contentObserver);
+    List<Audio> getAudio(@NonNull Uri uri);
 
-    void observeGenreAudioChanges(long genreId,ContentObserver contentObserver);
+    List<Audio> getAudio(@NonNull String[] audioIds);
 
-    void stopGenreObserving();
+    List<Audio> getAudioAboveDuration(long duration);
 
-    void stopGenreAudioObserving();
+    int deleteAudio(long id);
+
+    int updateAudio(long id, ContentValues values);
+
+    void observeAudioChanges(ContentObserver contentObserver);
+
+    void stopAudioObserving();
+
 }

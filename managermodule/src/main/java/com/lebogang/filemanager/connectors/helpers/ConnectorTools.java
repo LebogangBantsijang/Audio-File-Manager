@@ -14,7 +14,7 @@
  *
  */
 
-package com.lebogang.managermodule.connectors.helpers;
+package com.lebogang.filemanager.connectors.helpers;
 
 import android.annotation.SuppressLint;
 import android.net.Uri;
@@ -28,11 +28,8 @@ public class ConnectorTools {
             MediaStore.Audio.Media.ARTIST_ID,
             MediaStore.Audio.Media.DURATION,
             MediaStore.Audio.Media.SIZE,
-            MediaStore.Audio.Media.DATE_ADDED,
             MediaStore.Audio.Media.DATE_MODIFIED,
-            MediaStore.Audio.Media.DATE_TAKEN,
             MediaStore.Audio.Media.TITLE,
-            MediaStore.Audio.Media.DISPLAY_NAME,
             MediaStore.Audio.Media.ALBUM,
             MediaStore.Audio.Media.ARTIST,
             MediaStore.Audio.Media.COMPOSER,
@@ -41,13 +38,11 @@ public class ConnectorTools {
     };
     public static final String[] ALBUM_PROJECTION = {
             MediaStore.Audio.Albums._ID,
-            MediaStore.Audio.Albums.ALBUM_ID,
             MediaStore.Audio.Albums.ARTIST,
             MediaStore.Audio.Albums.FIRST_YEAR,
             MediaStore.Audio.Albums.LAST_YEAR,
             MediaStore.Audio.Albums.NUMBER_OF_SONGS,
-            MediaStore.Audio.Albums.ALBUM,
-            MediaStore.Audio.Albums.NUMBER_OF_SONGS_FOR_ARTIST
+            MediaStore.Audio.Albums.ALBUM
     };
     public static final String[] ARTIST_PROJECTION = {
             MediaStore.Audio.Artists._ID,

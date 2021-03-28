@@ -14,28 +14,8 @@
  *
  */
 
-package com.lebogang.managermodule.connectors.helpers;
+package com.lebogang.filemanager.connectors.helpers;
 
-import android.content.ContentValues;
-import android.database.ContentObserver;
-
-import com.lebogang.managermodule.data.Album;
-
-import java.util.List;
-
-public interface AlbumDatabaseInterface {
-
-    List<Album> getAlbums();
-
-    List<Album> getAlbums(long id);
-
-    List<Album> getAlbums(String albumName);
-
-    List<Album> getAlbumsForArtist(String artistName);
-
-    int updateAlbum(long id, ContentValues values);
-
-    void observeAlbumChanges(ContentObserver contentObserver);
-
-    void stopAlbumObserving();
+public enum SortTypes {
+    SORT_AUDIO, SORT_ALBUMS, SORT_ARTIST, SORT_GENRES
 }

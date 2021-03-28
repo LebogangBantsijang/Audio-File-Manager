@@ -14,38 +14,28 @@
  *
  */
 
-package com.lebogang.managermodule.connectors.helpers;
+package com.lebogang.filemanager.connectors.helpers;
 
 import android.content.ContentValues;
 import android.database.ContentObserver;
-import android.net.Uri;
 
-import androidx.annotation.NonNull;
-
-import com.lebogang.managermodule.data.Audio;
+import com.lebogang.filemanager.data.Album;
 
 import java.util.List;
 
-public interface AudioDatabaseInterface {
+public interface AlbumDatabaseInterface {
 
-    List<Audio> getAudio();
+    List<Album> getAlbums();
 
-    List<Audio> getAudio(long id);
+    List<Album> getAlbums(long id);
 
-    List<Audio> getAudio(@NonNull String name);
+    List<Album> getAlbums(String albumName);
 
-    List<Audio> getAudio(@NonNull Uri uri);
+    List<Album> getAlbumsForArtist(String artistName);
 
-    List<Audio> getAudio(@NonNull String[] audioIds);
+    int updateAlbum(long id, ContentValues values);
 
-    List<Audio> getAudioAboveDuration(long duration);
+    void observeAlbumChanges(ContentObserver contentObserver);
 
-    int deleteAudio(long id);
-
-    int updateAudio(long id, ContentValues values);
-
-    void observeAudioChanges(ContentObserver contentObserver);
-
-    void stopAudioObserving();
-
+    void stopAlbumObserving();
 }

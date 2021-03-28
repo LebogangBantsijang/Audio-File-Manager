@@ -14,8 +14,8 @@
  *
  */
 
-package com.lebogang.managermodule.connectors.helpers;
+package com.lebogang.filemanager.data;
 
-public enum SortTypes {
-    SORT_AUDIO, SORT_ALBUMS, SORT_ARTIST, SORT_GENRES
+class Video {
+
 }

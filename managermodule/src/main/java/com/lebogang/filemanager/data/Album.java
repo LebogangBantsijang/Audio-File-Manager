@@ -14,43 +14,34 @@
  *
  */
 
-package com.lebogang.managermodule.data;
+package com.lebogang.filemanager.data;
 
 import android.net.Uri;
 
 public class Album {
     private final long id;
-    private final long albumId;
     private final String albumName;
     private final String artist;
     private final String firstYear;
     private final String lastYear;
     private final int numberOfSongs;
-    private final int numberOfSongsForArtist;
     private final Uri albumArtUri;
     private final Uri contentUri;
 
-    private Album(long id, long albumId, String albumName, String artist
-            , String firstYear, String lastYear, int numberOfSongs, int numberOfSongsForArtist
-            , Uri albumArtUri, Uri contentUri) {
+    private Album(long id, String albumName, String artist, String firstYear, String lastYear
+            , int numberOfSongs, Uri albumArtUri, Uri contentUri) {
         this.id = id;
-        this.albumId = albumId;
         this.albumName = albumName;
         this.artist = artist;
         this.firstYear = firstYear;
         this.lastYear = lastYear;
         this.numberOfSongs = numberOfSongs;
-        this.numberOfSongsForArtist = numberOfSongsForArtist;
         this.albumArtUri = albumArtUri;
         this.contentUri = contentUri;
     }
 
     public long getId() {
         return id;
-    }
-
-    public long getAlbumId() {
-        return albumId;
     }
 
     public String getAlbumName() {
@@ -73,10 +64,6 @@ public class Album {
         return numberOfSongs;
     }
 
-    public int getNumberOfSongsForArtist() {
-        return numberOfSongsForArtist;
-    }
-
     public Uri getAlbumArt() {
         return albumArtUri;
     }
@@ -87,13 +74,11 @@ public class Album {
 
     public static class Builder{
         private long id;
-        private long albumId;
         private String albumName;
         private String artist;
         private String firstYear;
         private String lastYear;
         private int numberOfSongs;
-        private int numberOfSongsForArtist;
         private Uri albumArtUri;
         private Uri contentUri;
 
@@ -102,11 +87,6 @@ public class Album {
 
         public Builder setId(long id) {
             this.id = id;
-            return this;
-        }
-
-        public Builder setAlbumId(long albumId) {
-            this.albumId = albumId;
             return this;
         }
 
@@ -135,11 +115,6 @@ public class Album {
             return this;
         }
 
-        public Builder setNumberOfSongsForArtist(int numberOfSongsForArtist) {
-            this.numberOfSongsForArtist = numberOfSongsForArtist;
-            return this;
-        }
-
         public Builder setAlbumArtUri(Uri albumArtUri) {
             this.albumArtUri = albumArtUri;
             return this;
@@ -151,9 +126,9 @@ public class Album {
         }
 
         public Album build(){
-            return new Album(id,albumId,albumName
+            return new Album(id,albumName
                     ,artist,firstYear,lastYear,numberOfSongs
-                    ,numberOfSongsForArtist, albumArtUri, contentUri);
+                    , albumArtUri, contentUri);
         }
     }
 }

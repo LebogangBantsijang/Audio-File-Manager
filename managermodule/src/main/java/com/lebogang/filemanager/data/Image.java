@@ -14,8 +14,9 @@
  *
  */
 
-package com.lebogang.managermodule.data;
+package com.lebogang.filemanager.data;
 
-class Video {
-
+class Image {
+    public Image() {
+    }
 }
