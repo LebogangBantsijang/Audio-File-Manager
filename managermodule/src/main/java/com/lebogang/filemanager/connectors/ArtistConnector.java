@@ -22,6 +22,8 @@ import android.database.ContentObserver;
 import android.database.Cursor;
 import android.provider.MediaStore.Audio.Artists;
 
+import androidx.annotation.NonNull;
+
 import com.lebogang.filemanager.connectors.helpers.ArtistDatabaseInterface;
 import com.lebogang.filemanager.connectors.helpers.ConnectorTools;
 import com.lebogang.filemanager.data.Artist;
@@ -71,15 +73,13 @@ public class ArtistConnector implements ArtistDatabaseInterface {
                 , Artists._ID + "=?", new String[]{Long.toString(id)});
     }
 
-    @Override
-    public void observeArtistChanges(ContentObserver contentObserver) {
+    public void registerObserver(@NonNull ContentObserver contentObserver){
         this.contentObserver = contentObserver;
         contentResolver.registerContentObserver(ConnectorTools.ARTIST_EXTERNAL_URI
                 , true, contentObserver);
     }
 
-    @Override
-    public void stopArtistObserving() {
+    public void unregisterObserver(){
         contentResolver.unregisterContentObserver(contentObserver);
     }
 

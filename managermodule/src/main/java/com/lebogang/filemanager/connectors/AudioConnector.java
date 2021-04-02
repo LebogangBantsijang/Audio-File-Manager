@@ -22,7 +22,6 @@ import android.content.ContentValues;
 import android.database.ContentObserver;
 import android.database.Cursor;
 import android.net.Uri;
-import android.util.Log;
 
 import androidx.annotation.NonNull;
 
@@ -58,9 +57,10 @@ public class AudioConnector implements AudioDatabaseInterface {
     }
 
     @Override
+    @SuppressLint("InlinedApi")
     public List<Audio> getAudio() {
         Cursor cursor = contentResolver.query(ConnectorTools.AUDIO_EXTERNAL_URI, ConnectorTools.AUDIO_PROJECTION
-                , null, null, ConnectorTools.DEFAULT_AUDIO_SORT_ORDER);
+                , DURATION + " >=? AND " + IS_MUSIC, new String[]{Long.toString(ConnectorTools.DEFAULT_AUDIO_DURATION_FILTER)}, ConnectorTools.DEFAULT_AUDIO_SORT_ORDER);
         return iterateCursor(cursor);
     }
 
@@ -68,36 +68,39 @@ public class AudioConnector implements AudioDatabaseInterface {
     @SuppressLint("InlinedApi")
     public List<Audio> getAudioAboveDuration(long duration) {
         Cursor cursor = contentResolver.query(ConnectorTools.AUDIO_EXTERNAL_URI, ConnectorTools.AUDIO_PROJECTION
-                , DURATION + ">?", new String[]{Long.toString(duration), IS_MUSIC}
+                , DURATION + " >=? AND " + IS_MUSIC, new String[]{Long.toString(ConnectorTools.DEFAULT_AUDIO_DURATION_FILTER)}
                 , ConnectorTools.DEFAULT_AUDIO_SORT_ORDER);
         return iterateCursor(cursor);
     }
 
     @Override
+    @SuppressLint("InlinedApi")
     public List<Audio> getAudio(long id) {
         Cursor cursor = contentResolver.query(ConnectorTools.AUDIO_EXTERNAL_URI, ConnectorTools.AUDIO_PROJECTION
-                , _ID + "=?", new String[]{Long.toString(id), IS_MUSIC}
+                , _ID + "=? AND" + DURATION + " >=? AND " + IS_MUSIC, new String[]{Long.toString(id),Long.toString(ConnectorTools.DEFAULT_AUDIO_DURATION_FILTER)}
                 , ConnectorTools.DEFAULT_AUDIO_SORT_ORDER);
         return iterateCursor(cursor);
     }
 
     @Override
+    @SuppressLint("InlinedApi")
     public List<Audio> getAudio(@NonNull String name) {
         Cursor cursor = contentResolver.query(ConnectorTools.AUDIO_EXTERNAL_URI, ConnectorTools.AUDIO_PROJECTION
-                , TITLE + "=?", new String[]{name, IS_MUSIC}
+                , TITLE + "=? AND" + DURATION + " >=? AND " + IS_MUSIC, new String[]{name,Long.toString(ConnectorTools.DEFAULT_AUDIO_DURATION_FILTER)}
                 , ConnectorTools.DEFAULT_AUDIO_SORT_ORDER);
         return iterateCursor(cursor);
     }
 
     @Override
+    @SuppressLint("InlinedApi")
     public List<Audio> getAudio(@NonNull Uri uri) {
         Cursor cursor = contentResolver.query(uri, ConnectorTools.AUDIO_PROJECTION
-                , null, new String[]{IS_MUSIC}
-                , ConnectorTools.DEFAULT_AUDIO_SORT_ORDER);
+                , IS_MUSIC, null, ConnectorTools.DEFAULT_AUDIO_SORT_ORDER);
         return iterateCursor(cursor);
     }
 
     @Override
+    @SuppressLint("InlinedApi")
     public List<Audio> getAudio(@NonNull String[] audioIds) {
         String selection = "";
         for (int x = 0; x < audioIds.length; x++){
@@ -123,14 +126,12 @@ public class AudioConnector implements AudioDatabaseInterface {
                 , _ID + "=?",new String[]{Long.toString(id)});
     }
 
-    @Override
-    public void observeAudioChanges(ContentObserver contentObserver) {
+    public void registerObserver(ContentObserver contentObserver) {
         this.contentObserver = contentObserver;
         contentResolver.registerContentObserver(ConnectorTools.AUDIO_EXTERNAL_URI, true, contentObserver);
     }
 
-    @Override
-    public void stopAudioObserving() {
+    public void unregisterObserver() {
         contentResolver.unregisterContentObserver(contentObserver);
     }
 

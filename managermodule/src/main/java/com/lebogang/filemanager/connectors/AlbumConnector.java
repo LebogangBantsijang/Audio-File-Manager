@@ -21,6 +21,8 @@ import android.content.ContentValues;
 import android.database.ContentObserver;
 import android.database.Cursor;
 
+import androidx.annotation.NonNull;
+
 import com.lebogang.filemanager.connectors.helpers.AlbumDatabaseInterface;
 import com.lebogang.filemanager.connectors.helpers.ConnectorTools;
 import com.lebogang.filemanager.data.Album;
@@ -38,7 +40,6 @@ import static android.provider.MediaStore.Audio.Albums.ARTIST;
 import static android.provider.MediaStore.Audio.Albums.FIRST_YEAR;
 import static android.provider.MediaStore.Audio.Albums.LAST_YEAR;
 import static android.provider.MediaStore.Audio.Albums.NUMBER_OF_SONGS;
-import static android.provider.MediaStore.Audio.Albums.NUMBER_OF_SONGS_FOR_ARTIST;
 
 public class AlbumConnector implements AlbumDatabaseInterface {
     private final ContentResolver contentResolver;
@@ -82,14 +83,12 @@ public class AlbumConnector implements AlbumDatabaseInterface {
                 , new String[]{Long.toString(id)});
     }
 
-    @Override
-    public void observeAlbumChanges(ContentObserver contentObserver) {
+    public void registerObserver(@NonNull ContentObserver contentObserver){
         this.contentObserver = contentObserver;
         contentResolver.registerContentObserver(ConnectorTools.ALBUM_EXTERNAL_URI, true, contentObserver);
     }
 
-    @Override
-    public void stopAlbumObserving() {
+    public void unregisterObserver(){
         contentResolver.unregisterContentObserver(contentObserver);
     }
 

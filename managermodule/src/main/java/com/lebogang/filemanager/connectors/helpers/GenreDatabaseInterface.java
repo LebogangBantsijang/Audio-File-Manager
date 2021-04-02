@@ -29,12 +29,4 @@ public interface GenreDatabaseInterface {
     List<Genre> getGenre(String name);
 
     String[] getGenreAudioIds(long id);
-
-    void observeGenreChanges(ContentObserver contentObserver);
-
-    void observeGenreAudioChanges(long genreId,ContentObserver contentObserver);
-
-    void stopGenreObserving();
-
-    void stopGenreAudioObserving();
 }
