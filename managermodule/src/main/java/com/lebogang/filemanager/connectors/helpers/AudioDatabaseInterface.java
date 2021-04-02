@@ -17,7 +17,6 @@
 package com.lebogang.filemanager.connectors.helpers;
 
 import android.content.ContentValues;
-import android.database.ContentObserver;
 import android.net.Uri;
 
 import androidx.annotation.NonNull;
@@ -43,9 +42,5 @@ public interface AudioDatabaseInterface {
     int deleteAudio(long id);
 
     int updateAudio(long id, ContentValues values);
-
-    void observeAudioChanges(ContentObserver contentObserver);
-
-    void stopAudioObserving();
 
 }

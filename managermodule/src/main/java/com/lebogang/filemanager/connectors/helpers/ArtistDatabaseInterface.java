@@ -33,7 +33,4 @@ public interface ArtistDatabaseInterface {
 
     int updateArtist(long id, ContentValues values);
 
-    void observeArtistChanges( ContentObserver contentObserver);
-
-    void stopArtistObserving();
 }

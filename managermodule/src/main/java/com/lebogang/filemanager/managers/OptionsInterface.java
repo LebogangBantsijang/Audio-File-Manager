@@ -14,18 +14,10 @@
  *
  */
 
-package com.lebogang.filemanager;
+package com.lebogang.filemanager.managers;
 
-import android.os.Bundle;
+interface OptionsInterface {
 
-import androidx.appcompat.app.AppCompatActivity;
-
-public class MainActivity2 extends AppCompatActivity {
-
-    @Override
-    protected void onCreate(Bundle savedInstanceState) {
-        super.onCreate(savedInstanceState);
-        setContentView(R.layout.activity_main2);
-    }
+    void setSortOrder(String order);
 
 }

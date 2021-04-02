@@ -70,4 +70,6 @@ public class ConnectorTools {
     public static String DEFAULT_ALBUM_SORT_ORDER = MediaStore.Audio.Albums.ALBUM + " ASC";
     public static String DEFAULT_ARTIST_SORT_ORDER = MediaStore.Audio.Artists.ARTIST + " ASC";
     public static String DEFAULT_GENRE_SORT_ORDER = MediaStore.Audio.Genres.NAME + " ASC";
+
+    public static long DEFAULT_AUDIO_DURATION_FILTER = 0;
 }

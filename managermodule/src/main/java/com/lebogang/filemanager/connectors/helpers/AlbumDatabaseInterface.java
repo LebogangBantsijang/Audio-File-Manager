@@ -35,7 +35,4 @@ public interface AlbumDatabaseInterface {
 
     int updateAlbum(long id, ContentValues values);
 
-    void observeAlbumChanges(ContentObserver contentObserver);
-
-    void stopAlbumObserving();
 }

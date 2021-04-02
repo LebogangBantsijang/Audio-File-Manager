@@ -20,6 +20,8 @@ import android.content.ContentResolver;
 import android.database.ContentObserver;
 import android.database.Cursor;
 
+import androidx.annotation.NonNull;
+
 import com.lebogang.filemanager.connectors.helpers.ConnectorTools;
 import com.lebogang.filemanager.connectors.helpers.GenreDatabaseInterface;
 import com.lebogang.filemanager.data.Genre;
@@ -27,6 +29,7 @@ import com.lebogang.filemanager.data.helpers.UriHelper;
 
 import java.util.ArrayList;
 import java.util.Collections;
+import java.util.HashMap;
 import java.util.List;
 
 import static android.provider.MediaStore.Audio.Genres.Members.AUDIO_ID;
@@ -37,9 +40,11 @@ import static android.provider.MediaStore.Audio.Genres._ID;
 public class GenreConnector implements GenreDatabaseInterface {
     private final ContentResolver contentResolver;
     private ContentObserver contentObserver;
+    private final HashMap<Integer, ContentObserver> observerHashMap;
 
     public GenreConnector(ContentResolver contentResolver) {
         this.contentResolver = contentResolver;
+        observerHashMap = new HashMap<>();
     }
 
     @Override
@@ -63,26 +68,22 @@ public class GenreConnector implements GenreDatabaseInterface {
         return iterateCursorIds(cursor);
     }
 
-    @Override
-    public void observeGenreChanges(ContentObserver contentObserver) {
-        this.contentObserver = contentObserver;
-        contentResolver.registerContentObserver(ConnectorTools.GENRE_EXTERNAL_URI, true, contentObserver);
-    }
-
-    @Override
-    public void observeGenreAudioChanges(long genreId, ContentObserver contentObserver) {
-        this.contentObserver = contentObserver;
+    public void registerObserver(long genreId, @NonNull ContentObserver contentObserver) {
+        observerHashMap.put(1, contentObserver);
         contentResolver.registerContentObserver(ConnectorTools.getGenreAudioExternalUri(genreId), true, contentObserver);
     }
 
-    @Override
-    public void stopGenreObserving() {
-        contentResolver.unregisterContentObserver(contentObserver);
+    public void registerObserver(@NonNull ContentObserver contentObserver) {
+        observerHashMap.put(2, contentObserver);
+        contentResolver.registerContentObserver(ConnectorTools.GENRE_EXTERNAL_URI, true, contentObserver);
     }
 
-    @Override
-    public void stopGenreAudioObserving() {
-        contentResolver.unregisterContentObserver(contentObserver);
+    public void unregisterObserver() {
+        contentResolver.unregisterContentObserver(observerHashMap.get(1));
+    }
+
+    public void unregisterObserver(long genreId) {
+        contentResolver.unregisterContentObserver(observerHashMap.get(2));
     }
 
     private String[] iterateCursorIds(Cursor cursor) throws NullPointerException{
