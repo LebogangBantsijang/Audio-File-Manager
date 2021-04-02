@@ -5,7 +5,7 @@
 
 ## Introduction
 
-This library allows you to manage Album, Artist, Genre and Audio Items that are under the [MediaStore.Audio](https://developer.android.com/reference/android/provider/MediaStore.Audio) collection without having to deal with content resolvers or anything along those lines.
+This library allows you to manage Albums, Artists, Genres and Audio that are under the [MediaStore.Audio](https://developer.android.com/reference/android/provider/MediaStore.Audio) collection without having to deal with content resolvers or anything along those lines.
 
 ## Gettting Started
 
@@ -29,16 +29,18 @@ dependencies {
 * Before you start, ensure that you have permission to read or write to/from external storage. [Guide](https://developer.android.com/guide/topics/permissions/overview)
 
 #### Example
-How to get Audio and Album information from the external storage
+How to get Audio items from external storage. 
 
 ```java
-MediaManager mediaManager = new MediaManager(context);
-List<Audio> audioList = mediaManager.getAudio();
-List<Album> albumList = mediaManager.getAlbums();
-List<Artist> audioList = mediaManager.getArtists();
-List<Genre> albumList = mediaManager.getGenres();
+AudioManager audioManager = new AudioManager(context);
+List<Audio> list = audioManager.getAudio();
 
 ```
+
+For a video example, please click [here](https://youtu.be/T1jc-OqviLMw)
+
+#### Future plans
+I will include images and videos in to this project when i get the time lol.
 
 ### Compatibility
 * API 21+
@@ -46,6 +48,3 @@ List<Genre> albumList = mediaManager.getGenres();
 ### License
 Apache 2.0. See the LICENSE file for details.
 
-### Contribute
-
-Contributions are always welcome!
